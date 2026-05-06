@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panel del Asesor - APE Turnos SENA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#050066",
+                      "error": "#ba1a1a",
+                      "on-error-container": "#93000a",
+                      "outline": "#767685",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#303038",
+                      "surface-variant": "#e4e1ec",
+                      "inverse-primary": "#c0c1ff",
+                      "inverse-on-surface": "#f2effa",
+                      "secondary": "#7d5700",
+                      "on-primary-fixed": "#05006c",
+                      "on-tertiary-fixed-variant": "#871f13",
+                      "on-primary-fixed-variant": "#3032b5",
+                      "on-tertiary-fixed": "#400100",
+                      "on-background": "#1b1b23",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-container": "#10069f",
+                      "tertiary-fixed-dim": "#ffb4a7",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "surface-container": "#efecf8",
+                      "outline-variant": "#c7c5d6",
+                      "surface-container-high": "#eae7f2",
+                      "on-secondary-container": "#694900",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#ffdeab",
+                      "on-surface": "#1b1b23",
+                      "surface-dim": "#dbd8e4",
+                      "on-tertiary-container": "#f16c58",
+                      "surface-bright": "#fcf8ff",
+                      "tertiary": "#3c0100",
+                      "tertiary-container": "#630300",
+                      "surface-container-low": "#f5f2fd",
+                      "surface-container-highest": "#e4e1ec",
+                      "secondary-fixed-dim": "#ffba30",
+                      "tertiary-fixed": "#ffdad4",
+                      "on-secondary-fixed-variant": "#5f4100",
+                      "background": "#fcf8ff",
+                      "surface-tint": "#4a4dce",
+                      "secondary-container": "#fdb300",
+                      "on-primary": "#ffffff",
+                      "primary-fixed": "#e1e0ff",
+                      "surface": "#fcf8ff",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#858aff",
+                      "error-container": "#ffdad6",
+                      "on-secondary-fixed": "#271900",
+                      "on-surface-variant": "#464554"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "touch-target-min": "56px",
+                      "tv-margin": "64px",
+                      "kiosk-padding": "40px",
+                      "dashboard-gutter": "16px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "body-sm": ["Plus Jakarta Sans"],
+                      "h2-dashboard": ["Plus Jakarta Sans"],
+                      "display-queue": ["Syne"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "label-bold": ["Plus Jakarta Sans"],
+                      "h1-kiosk": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "body-sm": ["14px", {"lineHeight": "150%", "fontWeight": "400"}],
+                      "h2-dashboard": ["24px", {"lineHeight": "140%", "fontWeight": "600"}],
+                      "display-queue": ["120px", {"lineHeight": "110%", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "160%", "fontWeight": "400"}],
+                      "label-bold": ["12px", {"lineHeight": "100%", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "h1-kiosk": ["48px", {"lineHeight": "120%", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Subtly hide scrollbar for clean dashboard look */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #dbd8e4; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c7c5d6; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-sm h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="bg-surface-container dark:bg-surface-container-high h-screen w-64 docked left-0 flex flex-col h-full py-dashboard-gutter px-4 border-r border-surface-container-lowest z-20 shrink-0">
+<div class="mb-8 flex flex-col items-start gap-4 px-2">
+<img alt="Logo APE SENA" class="h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uisUQzRftTPxo7wzOF8qXgi1P3NDatpBrW9gs-Rek4Ll8CPZmVSGoTAg1pWhLlqswtBCik9VI7U_XMWoqPvx0mu4CAZgyW5G7HVYPENrudtl_hNhp1DpTXR1qdgdK0LP8WJLBG1LtdF93TZrhzAnl8VsQXzjCr-hE7ZW7AkXmvRlzXw8YrbtkJkiPJHlrqgGdgVGerLzGyDCU0Si6wy1Mpk2LOi0Sy9y_H2OGwh_C6hFuJy9E0_T0tTGuEW8j6JffEDBKkLrTvAEcU"/>
+<div>
+<h1 class="font-h2-dashboard text-h2-dashboard text-primary tracking-tight">Gestión APE</h1>
+<p class="text-on-surface-variant font-label-bold text-label-bold mt-1">Administrador</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<!-- Llamado de Turnos (Active) -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-secondary-container text-on-secondary-container font-bold active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined icon-fill">campaign</span>
+<span class="font-label-bold text-label-bold">Llamado de Turnos</span>
+</a>
+<!-- Gestión de Ventanillas -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">sensor_window</span>
+<span class="font-label-bold text-label-bold">Gestión de Ventanillas</span>
+</a>
+<!-- Métricas de Saturación -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-bold text-label-bold">Métricas de Saturación</span>
+</a>
+<!-- Configuración -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">settings_suggest</span>
+<span class="font-label-bold text-label-bold">Configuración</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-surface-container-highest">
+<button class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-error hover:bg-error-container hover:text-on-error-container font-label-bold text-label-bold transition-colors">
+<span class="material-symbols-outlined">logout</span>
+                Cerrar Sesión
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-background relative z-10">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline flex justify-between items-center w-full px-dashboard-gutter h-touch-target-min shrink-0">
+<div class="flex items-center">
+<span class="font-h2-dashboard text-h2-dashboard font-bold text-primary dark:text-inverse-primary hidden md:block">APE Turnos SENA</span>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="notifications" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button aria-label="settings" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button aria-label="help" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors duration-200">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-px h-6 bg-outline-variant mx-2"></div>
+<button class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant hover:ring-2 ring-primary transition-all ml-1">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a person wearing a neat uniform or business attire, set against a pristine, brightly lit modern office background. The lighting is soft and even, typical of a high-quality corporate directory photo. The color palette emphasizes clean whites, deep navy blues, and natural skin tones. The overall aesthetic is approachable, efficient, and aligns with a high-end light-mode corporate design system." src="https://lh3.googleusercontent.com/aida/ADBb0uiAU6b38npSRc9hkZUV9PX5Rku3HPL24pC49pWeBbk_1XACtMZMczCdC8kAGXoDk629Ce80Grm7w4jK24rJw6MhM4aZv52XUQy_-MnFzKg_p-fisIGWyilaOmAcjWZlLxDuEcayHYeROAFIhfbmKgb270KU_hNOxcrzJTIiG_i1-az-HyLUkmJPSB6IfIKSr0ZJNMrByVFoaTF_q1geDId7JXK4CCclmBcfSLxusa2KiD6X2nDGeVgUkQYO"/>
+</button>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<div class="flex-1 overflow-y-auto p-dashboard-gutter flex flex-col gap-dashboard-gutter">
+<!-- Page Header with Badge -->
+<div class="flex justify-between items-end mb-2">
+<div>
+<p class="text-on-surface-variant font-body-sm mb-1 uppercase tracking-wider">Ventanilla 04</p>
+<h2 class="font-h2-dashboard text-h2-dashboard text-on-surface m-0 leading-none">Panel del Asesor</h2>
+</div>
+<!-- Status Badge -->
+<div class="bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full flex items-center gap-2 shadow-sm border border-[#e6a200]">
+<span class="w-2 h-2 rounded-full bg-on-secondary-container animate-pulse"></span>
+<span class="font-label-bold text-label-bold uppercase">Turno Asignado</span>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-dashboard-gutter">
+<!-- Main Turn Display (Span 8) -->
+<div class="col-span-12 lg:col-span-8 bg-surface rounded-xl border border-outline-variant overflow-hidden flex flex-col relative">
+<!-- Subtle top accent line -->
+<div class="h-1 w-full bg-primary absolute top-0 left-0"></div>
+<div class="p-8 flex flex-col md:flex-row items-center justify-between gap-8 h-full">
+<!-- Turn Number -->
+<div class="flex flex-col items-center justify-center flex-1">
+<span class="text-on-surface-variant font-label-bold text-label-bold uppercase tracking-widest mb-4">Turno Actual</span>
+<div class="font-display-queue text-display-queue text-primary tracking-tight leading-none">
+                                G-115
+                            </div>
+<div class="mt-6 bg-surface-container px-4 py-1.5 rounded-md text-on-surface font-body-sm font-semibold border border-outline-variant">
+                                Categoría: General
+                            </div>
+</div>
+<!-- Divider -->
+<div class="hidden md:block w-px h-32 bg-outline-variant mx-4"></div>
+<!-- Chronometer -->
+<div class="flex flex-col items-center justify-center flex-1">
+<span class="text-on-surface-variant font-label-bold text-label-bold uppercase tracking-widest mb-4">Tiempo de Espera</span>
+<div class="font-h1-kiosk text-h1-kiosk text-on-surface tabular-nums bg-surface-container-low px-6 py-4 rounded-xl border border-surface-variant shadow-inner">
+                                00:00
+                            </div>
+<p class="text-on-surface-variant font-body-sm mt-4 text-center max-w-[200px]">
+                                El usuario ha sido llamado. Esperando confirmación de presencia en ventanilla.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Actions Panel (Span 4) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest rounded-xl border border-outline-variant p-6 flex flex-col justify-center gap-4">
+<h3 class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest mb-2 border-b border-outline-variant pb-2">Acciones Requeridas</h3>
+<!-- Primary Action -->
+<button class="w-full h-touch-target-min bg-primary text-on-primary rounded-lg font-body-lg text-body-lg font-bold flex items-center justify-center gap-3 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm ring-offset-2 ring-offset-background focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined">play_arrow</span>
+                        Iniciar Atención
+                    </button>
+<!-- Secondary Actions Stacked -->
+<div class="grid grid-cols-1 gap-4 mt-2">
+<button class="w-full h-touch-target-min bg-surface text-primary border-2 border-primary rounded-lg font-body-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined">campaign</span>
+                            Volver a llamar
+                        </button>
+<button class="w-full h-touch-target-min bg-error-container text-on-error-container rounded-lg font-body-sm font-semibold flex items-center justify-center gap-2 hover:bg-error hover:text-on-error transition-colors">
+<span class="material-symbols-outlined">person_off</span>
+                            No presentado
+                        </button>
+</div>
+</div>
+<!-- Bottom Auxiliary Area (Bento filler with requested images) -->
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-dashboard-gutter mt-4">
+<!-- Promo/Info Card 1 -->
+<div class="rounded-xl overflow-hidden border border-outline-variant relative h-48 group">
+<div class="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/30 transition-colors"></div>
+<img alt="Decorative background banner" class="absolute inset-0 w-full h-full object-cover z-0" data-alt="A wide, panoramic view of a sleek, modern architectural space, possibly a highly organized waiting area or an abstract data flow representation. The lighting is extremely bright and sterile, utilizing a corporate color palette dominated by pristine whites, cool greys, and sharp primary blue accents. The visual style is highly polished, professional, and communicates efficiency and institutional authority within a high-contrast light-mode setting." src="https://lh3.googleusercontent.com/aida/ADBb0uj28rBcOpuHrNB1reg_D06ToCclH8l3kv6JS_v2_z3azGZZBOFF_QBcTzZjf-nBg5OH2Ic6nXYVJ5vaNxmNv8vqIfhrfF_JtT3bI9HiJ6aRxJ718TenqHby3pB7AT1bn9k3RLgpIkTWULI2m7dpGLn4b2nvxHQSCyW3clAw0PibMVpDhejxLpV3ZdCkc4tWR0uZb2nyQY5QYtWvAoH1ue29VD9T1T0GbMVtffW3K-7jCnst5ZhI2YdYM0anaupOFdtCdwn23foOBGs"/>
+<div class="relative z-20 p-6 h-full flex flex-col justify-end">
+<h4 class="text-white font-h2-dashboard text-h2-dashboard mb-1 drop-shadow-md">Nuevas directrices de atención</h4>
+<p class="text-white/90 font-body-sm drop-shadow-md">Consulte el manual actualizado en el portal interno.</p>
+</div>
+</div>
+<!-- Promo/Info Card 2 -->
+<div class="rounded-xl overflow-hidden border border-outline-variant relative h-48 group">
+<div class="absolute inset-0 bg-primary/80 mix-blend-multiply z-10"></div>
+<img alt="Decorative background banner" class="absolute inset-0 w-full h-full object-cover z-0 grayscale" data-alt="A sophisticated, high-resolution texture or abstract background featuring soft, flowing geometric waves. The image is rendered in bright, light-mode compatible tones, utilizing subtle gradients of ice blue and pure white. The mood is calm, modern, and perfectly suited to sit behind complex UI elements without causing visual clutter. The lighting is diffused and even, emphasizing a pristine corporate aesthetic." src="https://lh3.googleusercontent.com/aida/ADBb0uisUQzRftTPxo7wzOF8qXgi1P3NDatpBrW9gs-Rek4Ll8CPZmVSGoTAg1pWhLlqswtBCik9VI7U_XMWoqPvx0mu4CAZgyW5G7HVYPENrudtl_hNhp1DpTXR1qdgdK0LP8WJLBG1LtdF93TZrhzAnl8VsQXzjCr-hE7ZW7AkXmvRlzXw8YrbtkJkiPJHlrqgGdgVGerLzGyDCU0Si6wy1Mpk2LOi0Sy9y_H2OGwh_C6hFuJy9E0_T0tTGuEW8j6JffEDBKkLrTvAEcU"/>
+<div class="relative z-20 p-6 h-full flex flex-col justify-between">
+<div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white border border-white/30">
+<span class="material-symbols-outlined">insights</span>
+</div>
+<div>
+<h4 class="text-white font-h2-dashboard text-h2-dashboard mb-1">Métricas del día</h4>
+<p class="text-primary-fixed-dim font-body-sm">45 turnos atendidos exitosamente hoy.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

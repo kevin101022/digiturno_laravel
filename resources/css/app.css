@@ -1,0 +1,254 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+    --font-display:
+        'Syne', ui-sans-serif, system-ui, sans-serif;
+
+    --color-amarillo: #FFB500;
+    --color-amarillo-light: #FFF3CC;
+    --color-azul: #10069F;
+    --color-azul-light: #E8E7F8;
+    --color-azul-dark: #0A0470;
+    --color-naranja: #FF671F;
+    --color-naranja-light: #FFE4D6;
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.87 0 0);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.87 0 0);
+}
+
+/* Modo oscuro desactivado para mantener diseño original inalterable */
+.dark {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.87 0 0);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* ============================================================
+   Kiosco APE — Módulo de atención táctil (atril público)
+   Tipografía con clamp() para escalar entre 1080p y 4K sin
+   distorsionar el diseño ni romper el layout en TV.
+   ============================================================ */
+@layer components {
+    /* Pantalla completa — ocupa 100dvh para kioscos táctiles */
+    .kiosco-root {
+        @apply min-h-dvh w-full bg-[#fcf8ff] overflow-hidden;
+        font-family: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+    }
+
+    /* Contenedor de cada paso del wizard */
+    .kiosco-screen {
+        @apply flex flex-col min-h-dvh w-full;
+    }
+
+    /* ── Tipografía escalable ─────────────────────────── */
+    .kiosco-h1 {
+        font-size: clamp(2rem, 3.5vw, 3rem);
+        line-height: 1.2;
+        font-weight: 700;
+    }
+
+    .kiosco-h2 {
+        font-size: clamp(1rem, 1.75vw, 1.5rem);
+        line-height: 1.4;
+        font-weight: 600;
+    }
+
+    .kiosco-body {
+        font-size: clamp(0.875rem, 1.25vw, 1.125rem);
+        line-height: 1.6;
+        font-weight: 400;
+    }
+
+    /* Número de turno — Syne, grande para leerse de lejos */
+    .kiosco-display {
+        font-family: 'Syne', ui-sans-serif, sans-serif;
+        font-size: clamp(4rem, 9vw, 8rem);
+        line-height: 1.1;
+        font-weight: 700;
+    }
+
+    .kiosco-caption {
+        font-size: clamp(0.75rem, 1vw, 0.875rem);
+        line-height: 1.5;
+        font-weight: 400;
+    }
+
+    /* ── Tarjetas de categoría ───────────────────────── */
+    .kiosco-card {
+        @apply flex flex-col items-center justify-center text-center;
+        @apply rounded-xl border-2 p-8 transition-all duration-200 active:scale-95;
+        min-height: clamp(180px, 22vh, 280px);
+        cursor: pointer;
+    }
+
+    .kiosco-card-icon {
+        font-size: clamp(3rem, 5vw, 5rem);
+        transition: transform 0.2s ease;
+    }
+
+    .kiosco-card:hover .kiosco-card-icon {
+        transform: scale(1.1);
+    }
+
+    /* ── Teclas del teclado numérico ─────────────────── */
+    .kiosco-key {
+        @apply bg-[#efecf8] text-[#1b1b23] rounded-2xl flex items-center justify-center;
+        @apply transition-colors duration-150 active:bg-[#e4e1ec] shadow-sm;
+        @apply hover:bg-[#eae7f2];
+        font-size: clamp(1.5rem, 2.5vw, 3rem);
+        font-weight: 700;
+        min-height: clamp(56px, 9vh, 96px);
+    }
+
+    .kiosco-key-action {
+        @apply bg-[#e4e1ec] text-[#464554] hover:bg-[#c7c5d6];
+    }
+
+    /* ── Botones de tipo de documento ────────────────── */
+    .kiosco-doc-btn {
+        @apply flex items-center justify-between w-full rounded-xl border px-5;
+        @apply transition-colors duration-150;
+        min-height: clamp(48px, 7vh, 72px);
+    }
+
+    /* ── Botón primario (Obtener Ticket / Continuar) ─── */
+    .kiosco-btn-primary {
+        @apply flex items-center justify-center gap-4;
+        @apply bg-[#10069F] text-white rounded-xl;
+        @apply transition-colors duration-200;
+        @apply hover:bg-[#050066] active:bg-[#0a0470];
+        @apply disabled:opacity-50 disabled:cursor-not-allowed;
+        @apply shadow-sm font-bold;
+        font-size: clamp(1.25rem, 2vw, 2rem);
+        min-height: clamp(64px, 10vh, 112px);
+        padding-inline: clamp(1.5rem, 3vw, 4rem);
+    }
+
+    /* ── Botón secundario (Anterior) ─────────────────── */
+    .kiosco-btn-secondary {
+        @apply flex items-center gap-3;
+        @apply border-2 border-[#767685] text-[#1b1b23] rounded-xl;
+        @apply transition-colors duration-150;
+        @apply hover:bg-[#f5f2fd];
+        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        font-weight: 600;
+        min-height: clamp(56px, 8vh, 80px);
+        padding-inline: clamp(1.5rem, 2.5vw, 3rem);
+    }
+}

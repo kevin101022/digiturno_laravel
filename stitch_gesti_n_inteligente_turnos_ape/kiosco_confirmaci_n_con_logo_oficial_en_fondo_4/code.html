@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APE Turnos SENA - Confirmación</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#3032b5",
+                        "on-error": "#ffffff",
+                        "primary-container": "#10069f",
+                        "surface": "#fcf8ff",
+                        "on-tertiary-fixed-variant": "#871f13",
+                        "on-primary-fixed": "#05006c",
+                        "surface-container-low": "#f5f2fd",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#ffb4a7",
+                        "on-secondary-fixed": "#271900",
+                        "surface-container": "#efecf8",
+                        "on-surface": "#1b1b23",
+                        "on-primary-container": "#858aff",
+                        "on-surface-variant": "#464554",
+                        "secondary": "#7d5700",
+                        "inverse-on-surface": "#f2effa",
+                        "surface-container-highest": "#e4e1ec",
+                        "secondary-fixed": "#ffdeab",
+                        "on-tertiary-fixed": "#400100",
+                        "inverse-primary": "#c0c1ff",
+                        "on-background": "#1b1b23",
+                        "surface-bright": "#fcf8ff",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "primary-fixed": "#e1e0ff",
+                        "background": "#fcf8ff",
+                        "tertiary": "#3c0100",
+                        "tertiary-container": "#630300",
+                        "secondary-fixed-dim": "#ffba30",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdad4",
+                        "inverse-surface": "#303038",
+                        "surface-tint": "#4a4dce",
+                        "outline": "#767685",
+                        "on-tertiary-container": "#f16c58",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#eae7f2",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "outline-variant": "#c7c5d6",
+                        "on-secondary-container": "#694900",
+                        "surface-dim": "#dbd8e4",
+                        "surface-variant": "#e4e1ec",
+                        "secondary-container": "#fdb300",
+                        "primary": "#050066",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "tv-margin": "64px",
+                        "touch-target-min": "56px",
+                        "base": "8px",
+                        "dashboard-gutter": "16px",
+                        "kiosk-padding": "40px"
+                    },
+                    "fontFamily": {
+                        "h2-dashboard": ["Plus Jakarta Sans"],
+                        "h1-kiosk": ["Plus Jakarta Sans"],
+                        "display-queue": ["Syne"],
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "h2-dashboard": ["24px", {"lineHeight": "140%", "fontWeight": "600"}],
+                        "h1-kiosk": ["48px", {"lineHeight": "120%", "fontWeight": "700"}],
+                        "display-queue": ["120px", {"lineHeight": "110%", "fontWeight": "700"}],
+                        "label-bold": ["12px", {"lineHeight": "100%", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "160%", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "150%", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center p-kiosk-padding antialiased">
+<!-- Main Container -->
+<main class="w-full max-w-4xl bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-12 flex flex-col items-center text-center space-y-8 relative overflow-hidden">
+<!-- Background Pattern -->
+<div class="absolute inset-0 opacity-5 pointer-events-none" data-alt="A very subtle, large-scale watermark of the APE logo in the background, providing brand identity without compromising the legibility of the ticket confirmation information." style="background-image: url('https://lh3.googleusercontent.com/aida/ADBb0uj28rBcOpuHrNB1reg_D06ToCclH8l3kv6JS_v2_z3azGZZBOFF_QBcTzZjf-nBg5OH2Ic6nXYVJ5vaNxmNv8vqIfhrfF_JtT3bI9HiJ6aRxJ718TenqHby3pB7AT1bn9k3RLgpIkTWULI2m7dpGLn4b2nvxHQSCyW3clAw0PibMVpDhejxLpV3ZdCkc4tWR0uZb2nyQY5QYtWvAoH1ue29VD9T1T0GbMVtffW3K-7jCnst5ZhI2YdYM0anaupOFdtCdwn23foOBGs'); background-size: 60%; background-position: center; background-repeat: no-repeat; opacity: 0.2;"></div>
+<!-- Header / Logo -->
+<header class="w-full flex justify-center mb-8 relative z-10">
+<img alt="APE Turnos SENA Logo" class="h-24 w-auto object-contain" data-alt="The official APE Turnos SENA logo, displayed prominently at the top of the kiosk interface. The logo features sharp, clean typography and the signature primary blue color, set against a pristine white background. The image is crisp and clear, ensuring maximum legibility from a distance." src="https://lh3.googleusercontent.com/aida/ADBb0uisUQzRftTPxo7wzOF8qXgi1P3NDatpBrW9gs-Rek4Ll8CPZmVSGoTAg1pWhLlqswtBCik9VI7U_XMWoqPvx0mu4CAZgyW5G7HVYPENrudtl_hNhp1DpTXR1qdgdK0LP8WJLBG1LtdF93TZrhzAnl8VsQXzjCr-hE7ZW7AkXmvRlzXw8YrbtkJkiPJHlrqgGdgVGerLzGyDCU0Si6wy1Mpk2LOi0Sy9y_H2OGwh_C6hFuJy9E0_T0tTGuEW8j6JffEDBKkLrTvAEcU"/>
+</header>
+<!-- Success Icon -->
+<div class="relative z-10 flex items-center justify-center w-32 h-32 bg-primary-fixed rounded-full mb-6">
+<span class="material-symbols-outlined text-primary" style="font-size: 80px; font-variation-settings: 'FILL' 1;">
+                check_circle
+            </span>
+</div>
+<!-- Success Message -->
+<div class="space-y-4 relative z-10 max-w-2xl">
+<h1 class="font-h1-kiosk text-h1-kiosk text-primary">¡Turno generado con éxito!</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Por favor, tome asiento y preste atención a las pantallas de llamado. Su número de turno es:</p>
+</div>
+<!-- Turn Number Display -->
+<div class="bg-surface-container py-8 px-16 rounded-xl border border-outline-variant inline-block relative z-10 my-8">
+<span class="font-display-queue text-display-queue text-primary tracking-tight">G-115</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant relative z-10 mb-8">Categoría: <strong>General</strong></p>
+<!-- Action Button -->
+<div class="w-full max-w-md relative z-10 mt-8">
+<button class="w-full min-h-[80px] bg-primary text-on-primary font-h2-dashboard text-h2-dashboard rounded-lg hover:bg-primary-container active:bg-on-primary-fixed-variant transition-colors duration-200 flex items-center justify-center shadow-sm">
+                Finalizar
+            </button>
+</div>
+<!-- Timer/Auto-redirect info -->
+<div class="mt-4 relative z-10">
+<p class="font-body-sm text-body-sm text-outline flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">timer</span>
+                Esta pantalla se cerrará automáticamente en 10 segundos
+            </p>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APE Turnos SENA - Panel Asesor de Víctimas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#050066",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "outline": "#767685",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#303038",
+                        "surface-variant": "#e4e1ec",
+                        "inverse-primary": "#c0c1ff",
+                        "inverse-on-surface": "#f2effa",
+                        "secondary": "#7d5700",
+                        "on-primary-fixed": "#05006c",
+                        "on-tertiary-fixed-variant": "#871f13",
+                        "on-primary-fixed-variant": "#3032b5",
+                        "on-tertiary-fixed": "#400100",
+                        "on-background": "#1b1b23",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#10069f",
+                        "tertiary-fixed-dim": "#ffb4a7",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container": "#efecf8",
+                        "outline-variant": "#c7c5d6",
+                        "surface-container-high": "#eae7f2",
+                        "on-secondary-container": "#694900",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdeab",
+                        "on-surface": "#1b1b23",
+                        "surface-dim": "#dbd8e4",
+                        "on-tertiary-container": "#f16c58",
+                        "surface-bright": "#fcf8ff",
+                        "tertiary": "#3c0100",
+                        "tertiary-container": "#630300",
+                        "surface-container-low": "#f5f2fd",
+                        "surface-container-highest": "#e4e1ec",
+                        "secondary-fixed-dim": "#ffba30",
+                        "tertiary-fixed": "#ffdad4",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "background": "#fcf8ff",
+                        "surface-tint": "#4a4dce",
+                        "secondary-container": "#fdb300",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e1e0ff",
+                        "surface": "#fcf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#858aff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#271900",
+                        "on-surface-variant": "#464554"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "56px",
+                        "tv-margin": "64px",
+                        "kiosk-padding": "40px",
+                        "dashboard-gutter": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "h2-dashboard": ["Plus Jakarta Sans"],
+                        "display-queue": ["Syne"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "h1-kiosk": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "150%", "fontWeight": "400" }],
+                        "h2-dashboard": ["24px", { "lineHeight": "140%", "fontWeight": "600" }],
+                        "display-queue": ["120px", { "lineHeight": "110%", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "160%", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "100%", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "h1-kiosk": ["48px", { "lineHeight": "120%", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row overflow-hidden font-body-lg">
+<!-- SideNavBar (Web Only) -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-surface-container dark:bg-surface-container-high py-dashboard-gutter px-4 flex-shrink-0 relative z-20 shadow-[1px_0_0_0_#E0E0E0]">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-primary-container text-on-primary-container flex items-center justify-center">
+<img alt="SENA Logo" class="w-full h-full object-cover" data-alt="A clean, minimalist logo of SENA inside a circular container. The design is modern corporate, utilizing deep primary blue colors on a stark white background. Lighting is flat and uniform, emphasizing legibility and institutional authority. The aesthetic is highly professional and sterile." src="https://lh3.googleusercontent.com/aida/ADBb0uiAU6b38npSRc9hkZUV9PX5Rku3HPL24pC49pWeBbk_1XACtMZMczCdC8kAGXoDk629Ce80Grm7w4jK24rJw6MhM4aZv52XUQy_-MnFzKg_p-fisIGWyilaOmAcjWZlLxDuEcayHYeROAFIhfbmKgb270KU_hNOxcrzJTIiG_i1-az-HyLUkmJPSB6IfIKSr0ZJNMrByVFoaTF_q1geDId7JXK4CCclmBcfSLxusa2KiD6X2nDGeVgUkQYO"/>
+</div>
+<div>
+<h1 class="font-h2-dashboard text-h2-dashboard text-primary truncate">Gestión APE</h1>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest mt-1 truncate">Administrador</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold uppercase">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="campaign">campaign</span>
+<span class="font-label-bold text-label-bold uppercase">Llamado de Turnos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-secondary-container text-on-secondary-container font-bold active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="sensor_window">sensor_window</span>
+<span class="font-label-bold text-label-bold uppercase">Gestión de Ventanillas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="analytics">analytics</span>
+<span class="font-label-bold text-label-bold uppercase">Métricas de Saturación</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="settings_suggest">settings_suggest</span>
+<span class="font-label-bold text-label-bold uppercase">Configuración</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant/30">
+<button class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-error hover:bg-error-container/20 transition-colors font-label-bold text-label-bold uppercase">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Cerrar Sesión
+            </button>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-dashboard-gutter h-touch-target-min bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline flex-shrink-0 z-10">
+<div class="flex items-center gap-4">
+<button class="md:hidden p-2 -ml-2 text-on-surface-variant rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<div class="font-h2-dashboard text-h2-dashboard font-bold text-primary dark:text-inverse-primary truncate">APE Turnos SENA</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container dark:hover:bg-inverse-surface transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container dark:hover:bg-inverse-surface transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container dark:hover:bg-inverse-surface transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="ml-2 w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A professional corporate headshot of a smiling customer service representative. The background is a clean, neutral white. The lighting is bright and flattering, indicative of a modern office environment. The style is strictly photographic and realistic." src="https://lh3.googleusercontent.com/aida/ADBb0uiAU6b38npSRc9hkZUV9PX5Rku3HPL24pC49pWeBbk_1XACtMZMczCdC8kAGXoDk629Ce80Grm7w4jK24rJw6MhM4aZv52XUQy_-MnFzKg_p-fisIGWyilaOmAcjWZlLxDuEcayHYeROAFIhfbmKgb270KU_hNOxcrzJTIiG_i1-az-HyLUkmJPSB6IfIKSr0ZJNMrByVFoaTF_q1geDId7JXK4CCclmBcfSLxusa2KiD6X2nDGeVgUkQYO"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto p-dashboard-gutter md:p-8 bg-surface-container-low flex flex-col">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+<div>
+<h2 class="font-h2-dashboard text-h2-dashboard text-on-surface mb-1">Ventanilla 3 - Asesor de Víctimas</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Atención prioritaria y validación documental.</p>
+</div>
+<div class="flex items-center gap-3 bg-primary-container text-on-primary-container px-4 py-2 rounded-full shadow-sm">
+<div class="w-2.5 h-2.5 rounded-full bg-surface-tint animate-pulse"></div>
+<span class="font-label-bold text-label-bold uppercase">En Atención</span>
+<span class="font-body-sm text-body-sm ml-2 font-mono">04:12</span>
+</div>
+</div>
+<!-- Bento Layout Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+<!-- Current Turn Column (Left) -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<!-- Main Turn Card -->
+<div class="bg-surface rounded-xl border border-outline-variant/50 p-6 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50"></div>
+<p class="font-label-bold text-label-bold text-secondary uppercase tracking-widest mb-2 z-10">Turno Actual</p>
+<h3 class="font-display-queue text-display-queue text-primary leading-none mb-4 z-10">V-021</h3>
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-variant text-on-surface-variant rounded-full font-label-bold text-label-bold uppercase z-10">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                            Población Víctima
+                        </div>
+</div>
+<!-- Citizen Info Card -->
+<div class="bg-surface rounded-xl border border-outline-variant/50 p-6 shadow-sm flex-1">
+<h4 class="font-label-bold text-label-bold text-on-surface-variant uppercase mb-4 pb-2 border-b border-outline-variant/30">Datos del Ciudadano</h4>
+<div class="space-y-4">
+<div>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase mb-1">Documento de Identidad</p>
+<p class="font-body-lg text-body-lg text-on-surface font-mono">CC 1.020.345.678</p>
+</div>
+<div>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase mb-1">Trámite Solicitado</p>
+<p class="font-body-lg text-body-lg text-on-surface">Registro de Hoja de Vida e Intermediación Laboral.</p>
+</div>
+<div class="bg-secondary-container/20 rounded-lg p-3 border border-secondary-container/30">
+<div class="flex gap-2 items-start">
+<span class="material-symbols-outlined text-secondary mt-0.5" data-icon="info">info</span>
+<p class="font-body-sm text-body-sm text-on-secondary-container">El ciudadano indica haber sido desplazado en 2021. Requiere validación prioritaria en sistema RUV antes de proceder con el registro completo.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RUV Validation Column (Right) -->
+<div class="lg:col-span-7 bg-surface rounded-xl border border-outline-variant/50 flex flex-col overflow-hidden shadow-sm">
+<div class="bg-surface-variant/50 px-6 py-4 border-b border-outline-variant/50 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="verified_user">verified_user</span>
+<h3 class="font-h2-dashboard text-h2-dashboard text-on-surface text-lg">Validación RUV (Registro Único de Víctimas)</h3>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Por favor, consulte el sistema oficial del RUV utilizando el número de documento proporcionado para verificar el estado de la víctima. Seleccione la acción correspondiente basándose en el resultado.</p>
+<!-- Decorative or Informational Image Area related to process -->
+<div class="w-full h-32 rounded-lg mb-6 overflow-hidden bg-surface-container relative border border-outline-variant/30 flex items-center justify-center">
+<img alt="Process visualization graphic" class="absolute inset-0 w-full h-full object-cover opacity-80" data-alt="A clean, abstract UI graphic showing a flowchart or validation process. The graphic uses geometric shapes in shades of blue and grey on a light background. The style is strictly flat vector illustration, suitable for a modern corporate dashboard. No text is visible in the graphic." src="https://lh3.googleusercontent.com/aida/ADBb0uj28rBcOpuHrNB1reg_D06ToCclH8l3kv6JS_v2_z3azGZZBOFF_QBcTzZjf-nBg5OH2Ic6nXYVJ5vaNxmNv8vqIfhrfF_JtT3bI9HiJ6aRxJ718TenqHby3pB7AT1bn9k3RLgpIkTWULI2m7dpGLn4b2nvxHQSCyW3clAw0PibMVpDhejxLpV3ZdCkc4tWR0uZb2nyQY5QYtWvAoH1ue29VD9T1T0GbMVtffW3K-7jCnst5ZhI2YdYM0anaupOFdtCdwn23foOBGs"/>
+<div class="absolute inset-0 bg-gradient-to-r from-surface/80 to-transparent"></div>
+<div class="relative z-10 px-4 w-full flex items-center">
+<span class="material-symbols-outlined text-3xl text-primary opacity-50 mr-2" data-icon="search">search</span>
+<div class="h-2 w-1/3 bg-outline-variant/50 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-2/3"></div>
+</div>
+</div>
+</div>
+<!-- Action Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
+<!-- Primary Action: Validated -->
+<button class="group relative flex flex-col p-4 rounded-xl border border-outline-variant hover:border-primary bg-surface hover:bg-primary/5 transition-all text-left">
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</div>
+<span class="font-h2-dashboard text-h2-dashboard text-base text-on-surface mb-1 group-hover:text-primary transition-colors">Continuar atención</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ciudadano validado en RUV exitosamente.</span>
+</button>
+<!-- Secondary Action: Rejected -->
+<button class="group relative flex flex-col p-4 rounded-xl border border-outline-variant hover:border-error bg-surface hover:bg-error/5 transition-all text-left">
+<div class="w-10 h-10 rounded-full bg-error/10 text-error flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="cancel">cancel</span>
+</div>
+<span class="font-h2-dashboard text-h2-dashboard text-base text-on-surface mb-1 group-hover:text-error transition-colors">Rechazar atención</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">No se encuentra registro en RUV.</span>
+</button>
+<!-- Escalation Action (Spans full width) -->
+<button class="md:col-span-2 group relative flex flex-row items-center gap-4 p-4 rounded-xl border border-outline-variant hover:border-secondary-container bg-surface hover:bg-secondary-container/5 transition-all text-left">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 text-on-secondary-container flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="supervisor_account">supervisor_account</span>
+</div>
+<div>
+<span class="block font-h2-dashboard text-h2-dashboard text-base text-on-surface mb-0.5 group-hover:text-on-secondary-container transition-colors">Escalar al coordinador</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Caso complejo o inconsistencias en la documentación presentada.</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panel Operativo Asesor - APE Turnos SENA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f2effa",
+                        "primary": "#050066",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#3032b5",
+                        "on-secondary-container": "#694900",
+                        "on-surface": "#1b1b23",
+                        "surface-container-high": "#eae7f2",
+                        "tertiary-fixed-dim": "#ffb4a7",
+                        "on-primary-fixed": "#05006c",
+                        "on-background": "#1b1b23",
+                        "outline-variant": "#c7c5d6",
+                        "on-error": "#ffffff",
+                        "outline": "#767685",
+                        "surface-container": "#efecf8",
+                        "tertiary-container": "#630300",
+                        "surface-tint": "#4a4dce",
+                        "primary-fixed": "#e1e0ff",
+                        "on-primary-container": "#858aff",
+                        "on-secondary-fixed": "#271900",
+                        "inverse-surface": "#303038",
+                        "surface-container-low": "#f5f2fd",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "on-tertiary-fixed-variant": "#871f13",
+                        "secondary-fixed-dim": "#ffba30",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#3c0100",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c0c1ff",
+                        "on-tertiary-fixed": "#400100",
+                        "tertiary-fixed": "#ffdad4",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#464554",
+                        "secondary-container": "#fdb300",
+                        "surface-bright": "#fcf8ff",
+                        "on-tertiary-container": "#f16c58",
+                        "background": "#fcf8ff",
+                        "surface-variant": "#e4e1ec",
+                        "surface": "#fcf8ff",
+                        "on-primary": "#ffffff",
+                        "secondary": "#7d5700",
+                        "secondary-fixed": "#ffdeab",
+                        "surface-container-highest": "#e4e1ec",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#10069f",
+                        "surface-dim": "#dbd8e4",
+                        "primary-fixed-dim": "#c0c1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "kiosk-padding": "40px",
+                        "tv-margin": "64px",
+                        "touch-target-min": "56px",
+                        "dashboard-gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "h1-kiosk": ["Plus Jakarta Sans"],
+                        "display-queue": ["Syne"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "h2-dashboard": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["12px", { "lineHeight": "100%", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "h1-kiosk": ["48px", { "lineHeight": "120%", "fontWeight": "700" }],
+                        "display-queue": ["120px", { "lineHeight": "110%", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "160%", "fontWeight": "400" }],
+                        "h2-dashboard": ["24px", { "lineHeight": "140%", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "150%", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-lg flex h-screen w-full overflow-hidden">
+<!-- Shared Component: SideNavBar -->
+<aside class="flex flex-col h-screen w-64 bg-surface-container py-dashboard-gutter px-4 border-r border-outline-variant flex-shrink-0 z-20">
+<div class="mb-8 flex gap-3 px-2">
+<div class="w-32 h-auto flex items-center justify-center overflow-hidden">
+<img alt="SENA APE Logo" class="w-full h-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uisUQzRftTPxo7wzOF8qXgi1P3NDatpBrW9gs-Rek4Ll8CPZmVSGoTAg1pWhLlqswtBCik9VI7U_XMWoqPvx0mu4CAZgyW5G7HVYPENrudtl_hNhp1DpTXR1qdgdK0LP8WJLBG1LtdF93TZrhzAnl8VsQXzjCr-hE7ZW7AkXmvRlzXw8YrbtkJkiPJHlrqgGdgVGerLzGyDCU0Si6wy1Mpk2LOi0Sy9y_H2OGwh_C6hFuJy9E0_T0tTGuEW8j6JffEDBKkLrTvAEcU"/>
+</div>
+<div>
+<h1 class="font-h2-dashboard text-h2-dashboard text-primary tracking-tight">Gestión APE</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Administrador</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold uppercase">Dashboard</span>
+</a>
+<!-- Active (Llamado de Turnos) -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-secondary-container text-on-secondary-container font-bold hover:bg-surface-container-highest active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="campaign" style="font-variation-settings: 'FILL' 1;">campaign</span>
+<span class="font-label-bold text-label-bold uppercase">Llamado de Turnos</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="sensor_window">sensor_window</span>
+<span class="font-label-bold text-label-bold uppercase">Gestión de Ventanillas</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-bold text-label-bold uppercase">Métricas de Saturación</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+<span class="font-label-bold text-label-bold uppercase">Configuración</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant">
+<button class="flex items-center gap-3 px-3 py-3 w-full rounded-lg text-error hover:bg-error-container active:scale-95 transition-all">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-bold text-label-bold uppercase">Cerrar Sesión</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="flex-1 flex flex-col min-w-0 bg-surface">
+<!-- Shared Component: TopNavBar -->
+<header class="flex justify-between items-center w-full px-dashboard-gutter h-touch-target-min bg-surface border-b border-outline-variant z-10 flex-shrink-0">
+<div class="flex items-center gap-4">
+<span class="font-h2-dashboard text-h2-dashboard font-bold text-primary tracking-tight">APE Turnos SENA</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-primary hover:bg-surface-container transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-primary hover:bg-surface-container transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-primary hover:bg-surface-container transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="ml-2 w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a friendly corporate advisor looking directly at the camera. The background is a slightly blurred, modern office environment with bright, natural lighting. The color palette is composed of soft whites, light greys, and navy blue accents, conveying trustworthiness and efficiency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwS8C5gxDh29X9ZQirgvFl4qW_bvtqutMF-gbsYDqWAmo4ut6VfPOLVU6KG9i-sNPydUHN52OlSonjJVcuYG8q30RMYPMFluLOyQVSF2URPKHjrAs9bTEhyCWd8JwxLk36_m-B_CWsAFcNq2y5dka3Y30xF6xt0pBUEsrBeht9G3YTQa6aqvkctoHXa2jRok7Z9kERO8IA2oAKI6MN7WpcSaiUGm3srb5JxI31wdoVQFtIjexzFy3QHbqRuXcg7qUBPLGZbWVe0bGp"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<div class="flex-1 overflow-auto p-dashboard-gutter">
+<!-- Page Header (Advisor Context) -->
+<div class="flex items-center justify-between mb-6 pb-4 border-b border-outline-variant">
+<div>
+<h2 class="font-h2-dashboard text-h2-dashboard text-on-surface">Ventanilla 03</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-[20px]">person</span>
+                        Asesor: Carlos Mendoza
+                    </p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed rounded-full font-label-bold text-label-bold flex items-center gap-1 uppercase">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Activo
+                    </span>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-dashboard-gutter h-[calc(100%-80px)]">
+<!-- Central Focus: Current Turn (Span 8) -->
+<div class="lg:col-span-8 flex flex-col gap-dashboard-gutter">
+<!-- High-visibility Card for Current Turn -->
+<div class="bg-primary rounded-xl p-8 flex flex-col items-center justify-center relative overflow-hidden flex-grow shadow-[0_4px_24px_-4px_rgba(5,0,102,0.15)]">
+<!-- Decorative background element -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-surface-tint opacity-20 rounded-full blur-3xl -mr-20 -mt-20"></div>
+<div class="z-10 text-center">
+<span class="font-label-bold text-label-bold text-inverse-primary uppercase tracking-widest block mb-2">Turno Actual</span>
+<div class="font-display-queue text-display-queue text-secondary-container leading-none tracking-tight mb-4 drop-shadow-sm">
+                                A-042
+                            </div>
+<div class="bg-surface/10 backdrop-blur-md border border-surface/20 rounded-lg px-6 py-3 inline-flex items-center gap-3">
+<span class="material-symbols-outlined text-inverse-primary">badge</span>
+<span class="font-body-lg text-body-lg text-on-primary font-medium">CC: 1.023.***.890</span>
+</div>
+<div class="mt-4 flex items-center justify-center gap-2 text-inverse-primary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+                                Tiempo en atención: 04:23
+                            </div>
+</div>
+</div>
+<!-- Primary Actions Container -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Huge Kiosk-style Button for Primary Action -->
+<button class="col-span-2 bg-secondary-container hover:bg-secondary text-on-secondary-container hover:text-on-secondary h-touch-target-min rounded-lg font-h2-dashboard text-h2-dashboard flex items-center justify-center gap-3 transition-colors active:scale-[0.98] shadow-sm">
+<span class="material-symbols-outlined text-[32px]">campaign</span>
+                            Llamar Siguiente
+                        </button>
+<button class="bg-surface border-2 border-outline-variant hover:bg-surface-container text-on-surface h-touch-target-min rounded-lg font-body-lg text-body-lg font-semibold flex items-center justify-center gap-2 transition-colors active:scale-95">
+<span class="material-symbols-outlined">play_arrow</span>
+                            Atender
+                        </button>
+<div class="grid grid-cols-2 gap-4">
+<button class="bg-error-container hover:bg-error text-on-error-container hover:text-on-error h-touch-target-min rounded-lg font-body-lg text-body-lg font-medium flex items-center justify-center gap-2 transition-colors active:scale-95">
+<span class="material-symbols-outlined">check_circle</span>
+                                Finalizar
+                            </button>
+<button class="bg-surface-variant hover:bg-outline-variant text-on-surface-variant h-touch-target-min rounded-lg font-body-lg text-body-lg font-medium flex items-center justify-center gap-2 transition-colors active:scale-95">
+<span class="material-symbols-outlined">move_up</span>
+                                Transferir
+                            </button>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Waiting Queue (Span 4) -->
+<div class="lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl flex flex-col overflow-hidden shadow-sm">
+<div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h3 class="font-h2-dashboard text-h2-dashboard text-primary text-[20px]">Cola de Espera</h3>
+<span class="bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-label-bold text-label-bold">5 en fila</span>
+</div>
+<div class="flex-1 overflow-y-auto p-2">
+<ul class="space-y-2">
+<!-- List Item -->
+<li class="bg-surface hover:bg-surface-container-low border border-surface-variant rounded-lg p-3 flex items-center justify-between transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-body-lg">
+                                        A-043
+                                    </div>
+<div>
+<div class="font-body-sm text-body-sm font-semibold text-on-surface">Asesoría General</div>
+<div class="font-label-bold text-label-bold text-on-surface-variant mt-1">Espera: 12 min</div>
+</div>
+</div>
+<button class="text-primary opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-primary-fixed rounded-full">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+</button>
+</li>
+<!-- List Item -->
+<li class="bg-surface hover:bg-surface-container-low border border-surface-variant rounded-lg p-3 flex items-center justify-between transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-variant text-on-surface-variant flex items-center justify-center font-bold text-body-lg">
+                                        A-044
+                                    </div>
+<div>
+<div class="font-body-sm text-body-sm font-semibold text-on-surface">Asesoría General</div>
+<div class="font-label-bold text-label-bold text-on-surface-variant mt-1">Espera: 15 min</div>
+</div>
+</div>
+</li>
+<!-- List Item -->
+<li class="bg-surface hover:bg-surface-container-low border border-surface-variant rounded-lg p-3 flex items-center justify-between transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-variant text-on-surface-variant flex items-center justify-center font-bold text-body-lg">
+                                        B-012
+                                    </div>
+<div>
+<div class="font-body-sm text-body-sm font-semibold text-on-surface">Registro Hoja Vida</div>
+<div class="font-label-bold text-label-bold text-on-surface-variant mt-1">Espera: 18 min</div>
+</div>
+</div>
+</li>
+<!-- List Item -->
+<li class="bg-surface hover:bg-surface-container-low border border-surface-variant rounded-lg p-3 flex items-center justify-between transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-variant text-on-surface-variant flex items-center justify-center font-bold text-body-lg">
+                                        A-045
+                                    </div>
+<div>
+<div class="font-body-sm text-body-sm font-semibold text-on-surface">Asesoría General</div>
+<div class="font-label-bold text-label-bold text-on-surface-variant mt-1">Espera: 22 min</div>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

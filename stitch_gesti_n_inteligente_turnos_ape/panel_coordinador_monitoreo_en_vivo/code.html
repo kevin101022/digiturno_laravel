@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard de Monitoreo en Vivo - APE Turnos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#fcf8ff",
+                        "primary": "#050066",
+                        "on-tertiary-container": "#f16c58",
+                        "surface-dim": "#dbd8e4",
+                        "surface-container": "#efecf8",
+                        "on-secondary-fixed": "#271900",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e4e1ec",
+                        "tertiary-fixed": "#ffdad4",
+                        "tertiary": "#3c0100",
+                        "secondary-fixed": "#ffdeab",
+                        "primary-container": "#10069f",
+                        "on-background": "#1b1b23",
+                        "on-surface": "#1b1b23",
+                        "on-secondary-container": "#694900",
+                        "surface-container-highest": "#e4e1ec",
+                        "tertiary-container": "#630300",
+                        "surface": "#fcf8ff",
+                        "on-tertiary": "#ffffff",
+                        "background": "#fcf8ff",
+                        "on-primary-fixed-variant": "#3032b5",
+                        "on-primary-fixed": "#05006c",
+                        "surface-tint": "#4a4dce",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "secondary": "#7d5700",
+                        "secondary-fixed-dim": "#ffba30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#871f13",
+                        "inverse-primary": "#c0c1ff",
+                        "primary-fixed": "#e1e0ff",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae7f2",
+                        "on-error": "#ffffff",
+                        "outline": "#767685",
+                        "inverse-on-surface": "#f2effa",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303038",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "tertiary-fixed-dim": "#ffb4a7",
+                        "outline-variant": "#c7c5d6",
+                        "secondary-container": "#fdb300",
+                        "on-surface-variant": "#464554",
+                        "surface-container-low": "#f5f2fd",
+                        "on-tertiary-fixed": "#400100",
+                        "on-primary-container": "#858aff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "56px",
+                        "dashboard-gutter": "16px",
+                        "kiosk-padding": "40px",
+                        "tv-margin": "64px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "h2-dashboard": ["Plus Jakarta Sans"],
+                        "display-queue": ["Syne"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "h1-kiosk": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "h2-dashboard": ["24px", { "lineHeight": "140%", "fontWeight": "600" }],
+                        "display-queue": ["120px", { "lineHeight": "110%", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "150%", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "100%", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "160%", "fontWeight": "400" }],
+                        "h1-kiosk": ["48px", { "lineHeight": "120%", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-sm text-body-sm h-screen flex overflow-hidden antialiased">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-low dark:bg-surface-container-lowest docked left-0 h-full w-72 border-r border-outline-variant dark:border-outline flex flex-col h-screen py-dashboard-gutter shrink-0">
+<div class="px-dashboard-gutter mb-8">
+<img alt="APE Logo Oficial" class="h-12 w-auto object-contain mb-4" data-alt="A professional, clean corporate logo design suitable for a government or institutional service platform. The logo features sharp, modern typography and a subtle geometric mark. The color palette is composed of deep navy blue and vibrant yellow, reflecting trust and energy. The design is high-contrast and legible, set against a pure white background to emphasize its institutional authority within a light-mode UI context." src="https://lh3.googleusercontent.com/aida/ADBb0uisUQzRftTPxo7wzOF8qXgi1P3NDatpBrW9gs-Rek4Ll8CPZmVSGoTAg1pWhLlqswtBCik9VI7U_XMWoqPvx0mu4CAZgyW5G7HVYPENrudtl_hNhp1DpTXR1qdgdK0LP8WJLBG1LtdF93TZrhzAnl8VsQXzjCr-hE7ZW7AkXmvRlzXw8YrbtkJkiPJHlrqgGdgVGerLzGyDCU0Si6wy1Mpk2LOi0Sy9y_H2OGwh_C6hFuJy9E0_T0tTGuEW8j6JffEDBKkLrTvAEcU"/>
+<h1 class="font-h2-dashboard text-h2-dashboard font-bold text-primary dark:text-primary-fixed">APE Turnos</h1>
+<p class="font-label-bold text-label-bold text-on-surface-variant">Panel de Coordinación</p>
+</div>
+<div class="flex-1 overflow-y-auto space-y-2">
+<!-- Active Tab -->
+<a class="flex items-center gap-dashboard-gutter bg-secondary-container text-on-secondary-container rounded-lg px-4 py-3 mx-2 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-dashboard-gutter text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">settings_accessibility</span>
+<span class="font-label-bold text-label-bold">Gestión Operativa</span>
+</a>
+<a class="flex items-center gap-dashboard-gutter text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-bold text-label-bold">Rendimiento</span>
+</a>
+<a class="flex items-center gap-dashboard-gutter text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-bold text-label-bold">Reportes</span>
+</a>
+<a class="flex items-center gap-dashboard-gutter text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Configuración</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden bg-surface-bright">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface docked top-0 w-full border-b border-outline-variant dark:border-outline flex justify-between items-center h-touch-target-min px-dashboard-gutter sticky top-0 z-50 shrink-0">
+<div class="flex items-center gap-4">
+<h2 class="font-h2-dashboard text-h2-dashboard font-extrabold text-primary dark:text-primary-fixed">Portal de Coordinación</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-all focus-within:ring-2 focus-within:ring-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-all focus-within:ring-2 focus-within:ring-primary">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer hover:bg-surface-container-low p-2 rounded-lg transition-all focus-within:ring-2 focus-within:ring-primary">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Perfil del Coordinador</span>
+<img alt="Avatar del Coordinador" class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A professional corporate headshot of an administrative coordinator, framed as a circular avatar. The subject is a confident individual in modern business attire, looking directly at the camera with a slight, approachable smile. The background is a soft, blurred office environment with natural light. The overall lighting is bright and even, matching a clean, light-mode UI aesthetic, conveying competence and institutional trust." src="https://lh3.googleusercontent.com/aida/ADBb0uiAU6b38npSRc9hkZUV9PX5Rku3HPL24pC49pWeBbk_1XACtMZMczCdC8kAGXoDk629Ce80Grm7w4jK24rJw6MhM4aZv52XUQy_-MnFzKg_p-fisIGWyilaOmAcjWZlLxDuEcayHYeROAFIhfbmKgb270KU_hNOxcrzJTIiG_i1-az-HyLUkmJPSB6IfIKSr0ZJNMrByVFoaTF_q1geDId7JXK4CCclmBcfSLxusa2KiD6X2nDGeVgUkQYO"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<main class="flex-1 overflow-y-auto p-dashboard-gutter">
+<!-- KPI Metrics Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-dashboard-gutter mb-dashboard-gutter">
+<!-- Turnos Totales -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-label-bold uppercase text-on-surface-variant">Turnos Totales Hoy</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">groups</span>
+</div>
+<div class="font-h1-kiosk text-h1-kiosk text-primary">1,248</div>
+<div class="absolute bottom-0 left-0 w-full h-1 bg-primary"></div>
+</div>
+<!-- Tiempo Promedio -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-label-bold uppercase text-on-surface-variant">Tiempo Prom. Espera</span>
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">timer</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-h1-kiosk text-h1-kiosk text-on-surface">14</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant">MIN</span>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-1 bg-secondary-container"></div>
+</div>
+<!-- Ventanillas Activas -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-label-bold uppercase text-on-surface-variant">Ventanillas Activas</span>
+<span class="material-symbols-outlined text-surface-tint" style="font-variation-settings: 'FILL' 1;">storefront</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-h1-kiosk text-h1-kiosk text-on-surface">24</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant">/ 30</span>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-1 bg-surface-tint"></div>
+</div>
+</div>
+<!-- Bento Grid Layout for Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-dashboard-gutter">
+<!-- Monitor de Alertas Preventivas (Span 1) -->
+<div class="lg:col-span-1 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col gap-4">
+<div class="flex items-center gap-2 pb-4 border-b border-outline-variant">
+<span class="material-symbols-outlined text-error">warning</span>
+<h3 class="font-h2-dashboard text-h2-dashboard text-on-surface">Alertas del Sistema</h3>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Alerta Alta -->
+<div class="bg-error-container text-on-error-container rounded-lg p-3 flex gap-3 items-start">
+<span class="material-symbols-outlined shrink-0 mt-0.5">error</span>
+<div>
+<p class="font-label-bold text-label-bold mb-1">Cuello de Botella Detectado</p>
+<p class="text-xs">Módulo B (Orientación) tiene 45 usuarios en espera. Tiempo estimado &gt; 25 min.</p>
+</div>
+</div>
+<!-- Alerta Media -->
+<div class="bg-secondary-fixed text-on-secondary-fixed-variant rounded-lg p-3 flex gap-3 items-start border border-secondary-container">
+<span class="material-symbols-outlined shrink-0 mt-0.5">info</span>
+<div>
+<p class="font-label-bold text-label-bold mb-1">Carga de Sistema Elevada</p>
+<p class="text-xs">Picos de registro en Kiosko 1 y 3. Considere habilitar apoyo temporal.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Panel Global de Módulos (Span 2) -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl flex flex-col overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">view_module</span>
+<h3 class="font-h2-dashboard text-h2-dashboard text-on-surface">Estado de Módulos</h3>
+</div>
+<div class="flex gap-2">
+<span class="px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold uppercase">Disponible</span>
+<span class="px-2 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold uppercase">Atendiendo</span>
+<span class="px-2 py-1 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-bold uppercase">Pausa</span>
+</div>
+</div>
+<div class="p-6 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant">
+<th class="py-3 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase">Módulo</th>
+<th class="py-3 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase">Asesor</th>
+<th class="py-3 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase">Estado</th>
+<th class="py-3 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase">Turno Actual</th>
+<th class="py-3 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase">Tiempo</th>
+</tr>
+</thead>
+<tbody>
+<!-- Row 1 -->
+<tr class="border-b border-outline-variant/50 hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-2 font-body-sm font-semibold">Ventanilla 01</td>
+<td class="py-3 px-2 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-[10px]">MR</div>
+<span>María Rodríguez</span>
+</td>
+<td class="py-3 px-2">
+<span class="px-2 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold uppercase flex w-fit items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Atendiendo</span>
+</td>
+<td class="py-3 px-2 font-bold text-primary">A-045</td>
+<td class="py-3 px-2 text-on-surface-variant">05:20</td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b border-outline-variant/50 hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-2 font-body-sm font-semibold">Ventanilla 02</td>
+<td class="py-3 px-2 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-[10px]">JP</div>
+<span>Juan Pérez</span>
+</td>
+<td class="py-3 px-2">
+<span class="px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold uppercase flex w-fit items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span>Disponible</span>
+</td>
+<td class="py-3 px-2 font-bold text-surface-dim">-</td>
+<td class="py-3 px-2 text-on-surface-variant">-</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-outline-variant/50 hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-2 font-body-sm font-semibold">Ventanilla 03</td>
+<td class="py-3 px-2 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-bold text-[10px]">LC</div>
+<span>Laura Gómez</span>
+</td>
+<td class="py-3 px-2">
+<span class="px-2 py-1 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-bold uppercase flex w-fit items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-outline"></span>Pausa</span>
+</td>
+<td class="py-3 px-2 font-bold text-surface-dim">-</td>
+<td class="py-3 px-2 text-on-surface-variant">12:05</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-2 font-body-sm font-semibold">Ventanilla 04</td>
+<td class="py-3 px-2 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-[10px]">CM</div>
+<span>Carlos Mora</span>
+</td>
+<td class="py-3 px-2">
+<span class="px-2 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold uppercase flex w-fit items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Atendiendo</span>
+</td>
+<td class="py-3 px-2 font-bold text-primary">B-102</td>
+<td class="py-3 px-2 text-on-surface-variant">02:15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

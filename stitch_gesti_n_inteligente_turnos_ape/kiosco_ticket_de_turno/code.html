@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ticket Kiosko APE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#3032b5",
+                        "on-error": "#ffffff",
+                        "primary-container": "#10069f",
+                        "surface": "#fcf8ff",
+                        "on-tertiary-fixed-variant": "#871f13",
+                        "on-primary-fixed": "#05006c",
+                        "surface-container-low": "#f5f2fd",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#ffb4a7",
+                        "on-secondary-fixed": "#271900",
+                        "surface-container": "#efecf8",
+                        "on-surface": "#1b1b23",
+                        "on-primary-container": "#858aff",
+                        "on-surface-variant": "#464554",
+                        "secondary": "#7d5700",
+                        "inverse-on-surface": "#f2effa",
+                        "surface-container-highest": "#e4e1ec",
+                        "secondary-fixed": "#ffdeab",
+                        "on-tertiary-fixed": "#400100",
+                        "inverse-primary": "#c0c1ff",
+                        "on-background": "#1b1b23",
+                        "surface-bright": "#fcf8ff",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "primary-fixed": "#e1e0ff",
+                        "background": "#fcf8ff",
+                        "tertiary": "#3c0100",
+                        "tertiary-container": "#630300",
+                        "secondary-fixed-dim": "#ffba30",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdad4",
+                        "inverse-surface": "#303038",
+                        "surface-tint": "#4a4dce",
+                        "outline": "#767685",
+                        "on-tertiary-container": "#f16c58",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#eae7f2",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "outline-variant": "#c7c5d6",
+                        "on-secondary-container": "#694900",
+                        "surface-dim": "#dbd8e4",
+                        "surface-variant": "#e4e1ec",
+                        "secondary-container": "#fdb300",
+                        "primary": "#050066",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "tv-margin": "64px",
+                        "touch-target-min": "56px",
+                        "base": "8px",
+                        "dashboard-gutter": "16px",
+                        "kiosk-padding": "40px"
+                    },
+                    "fontFamily": {
+                        "h2-dashboard": ["Plus Jakarta Sans"],
+                        "h1-kiosk": ["Plus Jakarta Sans"],
+                        "display-queue": ["Syne"],
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "h2-dashboard": ["24px", { "lineHeight": "140%", "fontWeight": "600" }],
+                        "h1-kiosk": ["48px", { "lineHeight": "120%", "fontWeight": "700" }],
+                        "display-queue": ["120px", { "lineHeight": "110%", "fontWeight": "700" }],
+                        "label-bold": ["12px", { "lineHeight": "100%", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "160%", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "150%", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom ticket jagged edge effect top and bottom */
+        .ticket-edge-top {
+            background-image: radial-gradient(circle at 10px 0, transparent 10px, theme('colors.surface-container-lowest') 11px);
+            background-size: 20px 20px;
+            background-repeat: repeat-x;
+            height: 10px;
+            width: 100%;
+            position: absolute;
+            top: -10px;
+            left: 0;
+        }
+        .ticket-edge-bottom {
+            background-image: radial-gradient(circle at 10px 10px, transparent 10px, theme('colors.surface-container-lowest') 11px);
+            background-size: 20px 20px;
+            background-repeat: repeat-x;
+            height: 10px;
+            width: 100%;
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+        }
+    </style>
+</head>
+<body class="bg-surface-dim min-h-screen flex items-center justify-center p-kiosk-padding font-body-lg text-on-surface antialiased">
+<!-- Ticket Container -->
+<!-- Navigation is intentionally suppressed as this is a transactional end-state (splash screen) -->
+<main class="w-full max-w-[420px] mx-auto">
+<div class="relative bg-surface-container-lowest shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] mt-4 mb-4 pb-12 pt-10 flex flex-col items-center">
+<!-- Simulated jagged thermal paper edges -->
+<div class="ticket-edge-top"></div>
+<div class="ticket-edge-bottom"></div>
+<!-- Header Section -->
+<div class="px-8 w-full flex flex-col items-center text-center">
+<img alt="APE SENA Logo" class="w-[240px] h-auto object-contain mb-6" data-alt="A clean, professional vector logo design of the APE (Agencia Pública de Empleo) SENA brand. The logo is displayed prominently in its standard institutional colors against a pure white background. The lighting is neutral and even, emphasizing clarity and corporate authority." src="https://lh3.googleusercontent.com/aida/ADBb0uisUQzRftTPxo7wzOF8qXgi1P3NDatpBrW9gs-Rek4Ll8CPZmVSGoTAg1pWhLlqswtBCik9VI7U_XMWoqPvx0mu4CAZgyW5G7HVYPENrudtl_hNhp1DpTXR1qdgdK0LP8WJLBG1LtdF93TZrhzAnl8VsQXzjCr-hE7ZW7AkXmvRlzXw8YrbtkJkiPJHlrqgGdgVGerLzGyDCU0Si6wy1Mpk2LOi0Sy9y_H2OGwh_C6hFuJy9E0_T0tTGuEW8j6JffEDBKkLrTvAEcU"/>
+<h1 class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest">
+                    Agencia Pública de Empleo - SENA
+                </h1>
+</div>
+<!-- Separator -->
+<div class="w-full relative py-6 flex items-center justify-center">
+<div class="absolute -left-4 w-8 h-8 rounded-full bg-surface-dim shadow-inner"></div>
+<hr class="w-full border-t-2 border-dashed border-outline-variant mx-4"/>
+<div class="absolute -right-4 w-8 h-8 rounded-full bg-surface-dim shadow-inner"></div>
+</div>
+<!-- Turn Number Section -->
+<div class="px-8 w-full flex flex-col items-center text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2 uppercase tracking-wide">Turno Asignado</p>
+<!-- Display Queue Typography for high visibility -->
+<div class="font-display-queue text-display-queue text-primary mb-2 whitespace-nowrap">
+                    G-115
+                </div>
+<h2 class="font-h2-dashboard text-h2-dashboard text-on-surface mb-6">
+                    Atención General
+                </h2>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface-variant bg-surface-container py-2 px-4 rounded-full">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span>24 Oct 2023</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant mx-1"></span>
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span>09:42 AM</span>
+</div>
+</div>
+<!-- Separator -->
+<div class="w-full relative py-8 flex items-center justify-center">
+<div class="absolute -left-4 w-8 h-8 rounded-full bg-surface-dim shadow-inner"></div>
+<hr class="w-full border-t-2 border-dashed border-outline-variant mx-4"/>
+<div class="absolute -right-4 w-8 h-8 rounded-full bg-surface-dim shadow-inner"></div>
+</div>
+<!-- Instructions & QR Section -->
+<div class="px-8 w-full flex flex-col items-center text-center">
+<p class="font-body-lg text-body-lg text-on-surface mb-8 max-w-[280px]">
+                    Por favor, espere su llamado en la sala de espera.
+                </p>
+<div class="p-2 bg-white border border-outline-variant rounded-lg inline-block shadow-sm mb-4">
+<img alt="QR Code de referencia" class="w-[140px] h-[140px] object-contain" data-alt="A crisp, high-contrast black and white QR code generated for digital scanning. The QR code is perfectly square, isolated on a stark white background to ensure optimal readability for optical scanners. It has a modern, functional, and purely informational aesthetic typical of utility applications." src="https://lh3.googleusercontent.com/aida/ADBb0uiAU6b38npSRc9hkZUV9PX5Rku3HPL24pC49pWeBbk_1XACtMZMczCdC8kAGXoDk629Ce80Grm7w4jK24rJw6MhM4aZv52XUQy_-MnFzKg_p-fisIGWyilaOmAcjWZlLxDuEcayHYeROAFIhfbmKgb270KU_hNOxcrzJTIiG_i1-az-HyLUkmJPSB6IfIKSr0ZJNMrByVFoaTF_q1geDId7JXK4CCclmBcfSLxusa2KiD6X2nDGeVgUkQYO"/>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Ref: #A892-XTQ
+                </p>
+</div>
+</div>
+</main>
+</body></html>

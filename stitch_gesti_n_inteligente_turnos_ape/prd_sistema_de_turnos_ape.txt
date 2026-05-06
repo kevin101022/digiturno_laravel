@@ -1,0 +1,18 @@
+# Proyecto: Sistema de Gestión de Turnos APE (SENA)
+
+## Resumen
+Sistema para modernizar y organizar el flujo de atención en oficinas APE.
+4 Módulos: Kiosco (Táctil), Display TV (Público), Panel Asesor (Operativo), Panel Coordinador (Admin).
+
+## Especificaciones de Pantallas
+1. **Kiosco (/kiosco):** Interfaz táctil simplificada. Selección de trámite por categoría (Víctima, Prioritario, Empresario, General). Generación de ticket.
+2. **Display TV (/display):** Pantalla de alta visibilidad. Muestra turno actual, ventanilla correspondiente y lista de próximos turnos.
+3. **Panel Asesor (/asesor):** Control de atención. Botones para "Llamar Siguiente", "Atender", "Finalizar" y "Transferir". Lista de cola propia.
+4. **Panel Coordinador (/coordinador):** Dashboard de métricas. Tiempo promedio de espera, estado de ventanillas en tiempo real, alertas de saturación.
+
+## Identidad Visual
+- **Azul (#10069F):** Headers, botones primarios.
+- **Amarillo (#FFB500):** Acentos, badges activos.
+- **Naranja (#FF671F):** Alertas, Categoría Víctima.
+- **Tipografía UI:** Plus Jakarta Sans.
+- **Tipografía Display:** Syne.

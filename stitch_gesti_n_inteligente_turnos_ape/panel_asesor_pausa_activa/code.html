@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APE Turnos SENA - Pausa Activa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#050066",
+                      "error": "#ba1a1a",
+                      "on-error-container": "#93000a",
+                      "outline": "#767685",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#303038",
+                      "surface-variant": "#e4e1ec",
+                      "inverse-primary": "#c0c1ff",
+                      "inverse-on-surface": "#f2effa",
+                      "secondary": "#7d5700",
+                      "on-primary-fixed": "#05006c",
+                      "on-tertiary-fixed-variant": "#871f13",
+                      "on-primary-fixed-variant": "#3032b5",
+                      "on-tertiary-fixed": "#400100",
+                      "on-background": "#1b1b23",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-container": "#10069f",
+                      "tertiary-fixed-dim": "#ffb4a7",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "surface-container": "#efecf8",
+                      "outline-variant": "#c7c5d6",
+                      "surface-container-high": "#eae7f2",
+                      "on-secondary-container": "#694900",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#ffdeab",
+                      "on-surface": "#1b1b23",
+                      "surface-dim": "#dbd8e4",
+                      "on-tertiary-container": "#f16c58",
+                      "surface-bright": "#fcf8ff",
+                      "tertiary": "#3c0100",
+                      "tertiary-container": "#630300",
+                      "surface-container-low": "#f5f2fd",
+                      "surface-container-highest": "#e4e1ec",
+                      "secondary-fixed-dim": "#ffba30",
+                      "tertiary-fixed": "#ffdad4",
+                      "on-secondary-fixed-variant": "#5f4100",
+                      "background": "#fcf8ff",
+                      "surface-tint": "#4a4dce",
+                      "secondary-container": "#fdb300",
+                      "on-primary": "#ffffff",
+                      "primary-fixed": "#e1e0ff",
+                      "surface": "#fcf8ff",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#858aff",
+                      "error-container": "#ffdad6",
+                      "on-secondary-fixed": "#271900",
+                      "on-surface-variant": "#464554"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "touch-target-min": "56px",
+                      "tv-margin": "64px",
+                      "kiosk-padding": "40px",
+                      "dashboard-gutter": "16px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "body-sm": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "h2-dashboard": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-queue": [
+                              "Syne"
+                      ],
+                      "body-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-bold": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "h1-kiosk": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "150%",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h2-dashboard": [
+                              "24px",
+                              {
+                                      "lineHeight": "140%",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-queue": [
+                              "120px",
+                              {
+                                      "lineHeight": "110%",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "160%",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-bold": [
+                              "12px",
+                              {
+                                      "lineHeight": "100%",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "h1-kiosk": [
+                              "48px",
+                              {
+                                      "lineHeight": "120%",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            display: inline-block;
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-sm h-screen w-screen overflow-hidden flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface text-primary font-body-lg text-body-lg docked full-width top-0 border-b border-outline-variant transition-colors duration-200 flex justify-between items-center w-full px-dashboard-gutter h-touch-target-min z-50 relative">
+<div class="flex items-center gap-4">
+<h1 class="font-h2-dashboard text-h2-dashboard font-bold text-primary">APE Turnos SENA</h1>
+<!-- Header Badge -->
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full flex items-center gap-2 border border-secondary/20 shadow-sm ml-4">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">pause_circle</span>
+<span class="font-label-bold text-label-bold uppercase tracking-wider">En Pausa</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant bg-surface-container flex-shrink-0">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A professional, modern corporate headshot avatar of an administrative employee, isolated on a light neutral background. The lighting is bright and even, casting soft shadows that convey approachability and competence. The color palette incorporates subtle tones of deep primary blue in the clothing to match the corporate identity, maintaining a crisp, high-contrast, professional aesthetic suitable for a secure internal dashboard profile image." src="https://lh3.googleusercontent.com/aida/ADBb0uiAU6b38npSRc9hkZUV9PX5Rku3HPL24pC49pWeBbk_1XACtMZMczCdC8kAGXoDk629Ce80Grm7w4jK24rJw6MhM4aZv52XUQy_-MnFzKg_p-fisIGWyilaOmAcjWZlLxDuEcayHYeROAFIhfbmKgb270KU_hNOxcrzJTIiG_i1-az-HyLUkmJPSB6IfIKSr0ZJNMrByVFoaTF_q1geDId7JXK4CCclmBcfSLxusa2KiD6X2nDGeVgUkQYO"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 relative overflow-hidden">
+<!-- SideNavBar (Underneath the overlay functionally, but structurally here) -->
+<aside class="bg-surface-container text-primary font-label-bold text-label-bold h-screen w-64 docked left-0 bg-surface-container-low transition-all flex flex-col h-full py-dashboard-gutter px-4 z-30 flex-shrink-0 border-r border-outline-variant/30">
+<div class="mb-8 px-4 flex items-center gap-3">
+<div class="w-12 h-12 rounded bg-primary-container text-on-primary-container flex items-center justify-center font-h2-dashboard text-h2-dashboard">
+                    S
+                </div>
+<div>
+<h2 class="font-h2-dashboard text-h2-dashboard text-primary text-base leading-tight">Gestión APE</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[12px]">Administrador</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+<span>Llamado de Turnos</span>
+</a>
+<!-- Active Nav Item based on assumption -->
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container font-bold rounded-lg active:scale-95 transition-all shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="sensor_window" style="font-variation-settings: 'FILL' 1;">sensor_window</span>
+<span>Gestión de Ventanillas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Métricas de Saturación</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-all mt-auto mb-4" href="#">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+<span>Configuración</span>
+</a>
+</nav>
+<button class="w-full flex items-center justify-center gap-2 py-3 border border-outline rounded-lg text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span class="font-label-bold text-label-bold">Cerrar Sesión</span>
+</button>
+</aside>
+<!-- Dummy Main Content Area (Obscured) -->
+<main class="flex-1 bg-surface-container-low p-6 z-20 relative overflow-hidden">
+<div class="max-w-6xl mx-auto space-y-6 opacity-40 blur-[2px] pointer-events-none">
+<div class="h-48 rounded-xl bg-surface overflow-hidden relative border border-outline-variant">
+<img alt="Background banner showing statistics" class="w-full h-full object-cover opacity-60" data-alt="A wide, abstract data visualization background featuring sweeping, modern geometric curves and subtle bar charts in monochromatic shades of primary blue and crisp white. The lighting is diffused and professional, creating a clean, high-tech corporate dashboard aesthetic. Generous negative space implies a functional, efficient environment suited for administrative metrics, with soft tonal layers replacing harsh shadows." src="https://lh3.googleusercontent.com/aida/ADBb0uj28rBcOpuHrNB1reg_D06ToCclH8l3kv6JS_v2_z3azGZZBOFF_QBcTzZjf-nBg5OH2Ic6nXYVJ5vaNxmNv8vqIfhrfF_JtT3bI9HiJ6aRxJ718TenqHby3pB7AT1bn9k3RLgpIkTWULI2m7dpGLn4b2nvxHQSCyW3clAw0PibMVpDhejxLpV3ZdCkc4tWR0uZb2nyQY5QYtWvAoH1ue29VD9T1T0GbMVtffW3K-7jCnst5ZhI2YdYM0anaupOFdtCdwn23foOBGs"/>
+</div>
+<div class="grid grid-cols-3 gap-6">
+<div class="h-64 rounded-xl bg-surface border border-outline-variant p-4"></div>
+<div class="h-64 rounded-xl bg-surface border border-outline-variant overflow-hidden relative col-span-2">
+<img alt="Secondary banner showing queue trends" class="w-full h-full object-cover opacity-50" data-alt="A detailed, wide-format digital dashboard component illustrating queue trends with stylized, glowing line graphs spanning across a pristine white background. Accents of deep blue and subtle orange highlight critical data points. The visual style is clinical, modern, and highly legible, emphasizing high-contrast accessibility and a professional, function-first layout typical of an institutional control center." src="https://lh3.googleusercontent.com/aida/ADBb0uisUQzRftTPxo7wzOF8qXgi1P3NDatpBrW9gs-Rek4Ll8CPZmVSGoTAg1pWhLlqswtBCik9VI7U_XMWoqPvx0mu4CAZgyW5G7HVYPENrudtl_hNhp1DpTXR1qdgdK0LP8WJLBG1LtdF93TZrhzAnl8VsQXzjCr-hE7ZW7AkXmvRlzXw8YrbtkJkiPJHlrqgGdgVGerLzGyDCU0Si6wy1Mpk2LOi0Sy9y_H2OGwh_C6hFuJy9E0_T0tTGuEW8j6JffEDBKkLrTvAEcU"/>
+</div>
+</div>
+</div>
+<!-- THE LOCK/PAUSE OVERLAY MODAL -->
+<div class="absolute inset-0 z-40 bg-inverse-surface/85 backdrop-blur-md flex items-center justify-center p-4">
+<div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl p-10 flex flex-col items-center text-center shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] border border-outline-variant relative overflow-hidden transform transition-all">
+<!-- Decorative background element for the modal -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Icon -->
+<div class="w-24 h-24 rounded-full bg-secondary-container/10 flex items-center justify-center mb-6 relative z-10">
+<span class="material-symbols-outlined text-[56px] text-secondary-container drop-shadow-sm" style="font-variation-settings: 'FILL' 1;">motion_photos_pause</span>
+</div>
+<!-- Content -->
+<h2 class="font-h1-kiosk text-[40px] leading-tight font-bold text-on-surface mb-3 relative z-10 tracking-tight">En Pausa</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 relative z-10 flex items-center gap-2 bg-surface-container px-6 py-2 rounded-full border border-outline-variant/50">
+<span class="material-symbols-outlined text-[20px]">info</span>
+                        Motivo: <strong class="text-on-surface font-semibold">Descanso</strong>
+</p>
+<!-- Action -->
+<button class="w-full bg-primary text-on-primary hover:bg-primary-container active:bg-primary-fixed-variant transition-colors duration-200 h-[64px] rounded-xl flex items-center justify-center gap-3 relative z-10 group shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-[28px] group-hover:scale-110 transition-transform duration-300" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+<span class="font-label-bold text-[16px] tracking-widest uppercase">Reanudar Ventanilla</span>
+</button>
+<p class="font-body-sm text-body-sm text-on-surface-variant/60 mt-6 relative z-10">
+                        Su ventanilla no está recibiendo nuevos turnos.
+                    </p>
+</div>
+</div>
+</main>
+</div>
+</body></html>

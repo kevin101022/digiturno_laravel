@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SENA - Calificación de Atención</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "surface-container": "#efecf8",
+                        "outline": "#767685",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#05006c",
+                        "inverse-surface": "#303038",
+                        "background": "#fcf8ff",
+                        "surface-bright": "#fcf8ff",
+                        "on-secondary-container": "#694900",
+                        "primary-container": "#10069f",
+                        "tertiary-container": "#630300",
+                        "on-surface-variant": "#464554",
+                        "on-secondary-fixed": "#271900",
+                        "outline-variant": "#c7c5d6",
+                        "on-tertiary-container": "#f16c58",
+                        "secondary": "#7d5700",
+                        "error-container": "#ffdad6",
+                        "on-background": "#1b1b23",
+                        "surface": "#fcf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#c0c1ff",
+                        "tertiary-fixed": "#ffdad4",
+                        "inverse-on-surface": "#f2effa",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb4a7",
+                        "on-tertiary-fixed-variant": "#871f13",
+                        "surface-tint": "#4a4dce",
+                        "secondary-fixed": "#ffdeab",
+                        "secondary-container": "#fdb300",
+                        "primary": "#050066",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e4e1ec",
+                        "on-surface": "#1b1b23",
+                        "surface-dim": "#dbd8e4",
+                        "primary-fixed": "#e1e0ff",
+                        "on-primary-container": "#858aff",
+                        "surface-container-low": "#f5f2fd",
+                        "secondary-fixed-dim": "#ffba30",
+                        "on-primary-fixed-variant": "#3032b5",
+                        "tertiary": "#3c0100",
+                        "surface-variant": "#e4e1ec",
+                        "on-tertiary-fixed": "#400100",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container-high": "#eae7f2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "56px",
+                        "tv-margin": "64px",
+                        "kiosk-padding": "40px",
+                        "dashboard-gutter": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "h2-dashboard": ["Plus Jakarta Sans"],
+                        "h1-kiosk": ["Plus Jakarta Sans"],
+                        "display-queue": ["Syne"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-bold": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "h2-dashboard": ["24px", { "lineHeight": "140%", "fontWeight": "600" }],
+                        "h1-kiosk": ["48px", { "lineHeight": "120%", "fontWeight": "700" }],
+                        "display-queue": ["120px", { "lineHeight": "110%", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "150%", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "160%", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "100%", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-screen w-full overflow-hidden flex flex-col font-body-sm">
+<!-- TopAppBar for Context (Minimal, as this is a kiosk/rating screen) -->
+<header class="flex justify-between items-center h-touch-target-min px-kiosk-padding w-full sticky top-0 z-50 bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-dashboard-gutter">
+<!-- SENA Brand Logo Placeholder -->
+<img alt="SENA Logo" class="h-8 object-contain" data-alt="The official logo of SENA (Servicio Nacional de Aprendizaje) featuring the word SENA in a bold, professional sans-serif typeface. The logo is displayed in the primary corporate color, a deep, authoritative navy blue, against a pristine white background. The style is modern, minimal, and highly legible, suitable for an institutional government kiosk interface." src="https://lh3.googleusercontent.com/aida/ADBb0ujDuO29AwOH3ZGbOIihtzBmcBMwHJ8LqLCfsAxOwJRfgbS2Rcpeti5a5r7O6p1koWSFknz9XgLFOagyR0ZYlKNedyHVHwgaespoWiQ1cbQulWTH_cpCB1jlgPl0NEnWy46vhYEZX7hioGo9dx9Rzt2rViNkfBSSwy-VTSXS_3m3xmxM6G2xjaG2yWB1J91AFSbnPkp1k7LDvH4A7TR7SyonT6G-JpSb0ArW4q_NcdyUMNWln7eu0z9QikZodIWfZ5D8MdFxtdzvFw"/>
+<span class="font-h2-dashboard text-h2-dashboard font-extrabold text-primary ml-4 border-l border-outline-variant pl-4">Atención al Ciudadano</span>
+</div>
+</header>
+<!-- Main Content Area - Kiosk Layout -->
+<main class="flex-1 flex flex-col items-center justify-center p-kiosk-padding w-full max-w-7xl mx-auto">
+<!-- Rating Card Container -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm w-full max-w-4xl p-12 flex flex-col items-center text-center gap-10">
+<!-- Reference Data -->
+<div class="flex flex-col items-center gap-6 w-full pb-10 border-b border-outline-variant">
+<!-- Avatar -->
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container-high bg-surface-variant flex-shrink-0">
+<img alt="Avatar de la Asesora" class="w-full h-full object-cover" data-alt="A professional headshot of a friendly female advisor named María Rodríguez. She is wearing a modern corporate uniform, perhaps a tailored blazer over a crisp blouse, reflecting an institutional government setting. The lighting is soft, even, and flattering, creating a welcoming and trustworthy expression. The background is a clean, light neutral tone, emphasizing her face and professional demeanor in a high-quality kiosk interface." src="https://lh3.googleusercontent.com/aida/ADBb0uiAU6b38npSRc9hkZUV9PX5Rku3HPL24pC49pWeBbk_1XACtMZMczCdC8kAGXoDk629Ce80Grm7w4jK24rJw6MhM4aZv52XUQy_-MnFzKg_p-fisIGWyilaOmAcjWZlLxDuEcayHYeROAFIhfbmKgb270KU_hNOxcrzJTIiG_i1-az-HyLUkmJPSB6IfIKSr0ZJNMrByVFoaTF_q1geDId7JXK4CCclmBcfSLxusa2KiD6X2nDGeVgUkQYO"/>
+</div>
+<div class="flex flex-col items-center gap-2">
+<h2 class="font-h1-kiosk text-h1-kiosk text-on-surface">María Rodríguez</h2>
+<div class="flex items-center gap-dashboard-gutter text-on-surface-variant font-body-lg text-body-lg mt-2">
+<div class="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full">
+<span class="material-symbols-outlined text-primary">desk</span>
+<span>Ventanilla 04</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<span>10:30 AM</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Rating Section -->
+<div class="flex flex-col items-center gap-8 w-full pt-4">
+<h3 class="font-h2-dashboard text-h2-dashboard text-on-surface">¿Cómo calificarías la atención recibida?</h3>
+<!-- Star Rating Interactive Element -->
+<div class="flex gap-4 sm:gap-8 justify-center items-center">
+<button class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-4 focus:ring-primary/20 group">
+<span class="material-symbols-outlined text-[64px] md:text-[80px] text-outline-variant group-hover:text-secondary-container transition-colors">star</span>
+</button>
+<button class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-4 focus:ring-primary/20 group">
+<span class="material-symbols-outlined text-[64px] md:text-[80px] text-outline-variant group-hover:text-secondary-container transition-colors">star</span>
+</button>
+<button class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-4 focus:ring-primary/20 group">
+<span class="material-symbols-outlined text-[64px] md:text-[80px] text-outline-variant group-hover:text-secondary-container transition-colors">star</span>
+</button>
+<button class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-4 focus:ring-primary/20 group">
+<span class="material-symbols-outlined text-[64px] md:text-[80px] text-outline-variant group-hover:text-secondary-container transition-colors">star</span>
+</button>
+<button class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-4 focus:ring-primary/20 group">
+<span class="material-symbols-outlined text-[64px] md:text-[80px] text-outline-variant group-hover:text-secondary-container transition-colors">star</span>
+</button>
+</div>
+</div>
+<!-- Action Button -->
+<div class="w-full max-w-md mt-6">
+<!-- Disabled state button as requested -->
+<button class="w-full h-touch-target-min min-h-[64px] rounded-full font-h2-dashboard text-h2-dashboard bg-surface-container-high text-on-surface-variant opacity-50 cursor-not-allowed flex items-center justify-center gap-3 transition-all" disabled="">
+<span>Enviar Calificación</span>
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Footer imagery / branding -->
+<footer class="w-full flex justify-center p-8 opacity-40">
+<img alt="SENA Decorative footer" class="h-12 object-contain" data-alt="A subtle, minimalist decorative footer graphic reflecting the corporate identity of the government institution. It features abstract, geometric lines and shapes in varying shades of corporate blue and white, creating a clean, modern, and professional aesthetic suitable for the bottom edge of a kiosk interface. The style is restrained and elegant, ensuring it does not distract from the primary interactive elements." src="https://lh3.googleusercontent.com/aida/ADBb0uj28rBcOpuHrNB1reg_D06ToCclH8l3kv6JS_v2_z3azGZZBOFF_QBcTzZjf-nBg5OH2Ic6nXYVJ5vaNxmNv8vqIfhrfF_JtT3bI9HiJ6aRxJ718TenqHby3pB7AT1bn9k3RLgpIkTWULI2m7dpGLn4b2nvxHQSCyW3clAw0PibMVpDhejxLpV3ZdCkc4tWR0uZb2nyQY5QYtWvAoH1ue29VD9T1T0GbMVtffW3K-7jCnst5ZhI2YdYM0anaupOFdtCdwn23foOBGs"/>
+</footer>
+</body></html>

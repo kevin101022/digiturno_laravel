@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard Coordinador - APE Turnos SENA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f2effa",
+                        "primary": "#050066",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#3032b5",
+                        "on-secondary-container": "#694900",
+                        "on-surface": "#1b1b23",
+                        "surface-container-high": "#eae7f2",
+                        "tertiary-fixed-dim": "#ffb4a7",
+                        "on-primary-fixed": "#05006c",
+                        "on-background": "#1b1b23",
+                        "outline-variant": "#c7c5d6",
+                        "on-error": "#ffffff",
+                        "outline": "#767685",
+                        "surface-container": "#efecf8",
+                        "tertiary-container": "#630300",
+                        "surface-tint": "#4a4dce",
+                        "primary-fixed": "#e1e0ff",
+                        "on-primary-container": "#858aff",
+                        "on-secondary-fixed": "#271900",
+                        "inverse-surface": "#303038",
+                        "surface-container-low": "#f5f2fd",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "on-tertiary-fixed-variant": "#871f13",
+                        "secondary-fixed-dim": "#ffba30",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#3c0100",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c0c1ff",
+                        "on-tertiary-fixed": "#400100",
+                        "tertiary-fixed": "#ffdad4",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#464554",
+                        "secondary-container": "#fdb300",
+                        "surface-bright": "#fcf8ff",
+                        "on-tertiary-container": "#f16c58",
+                        "background": "#fcf8ff",
+                        "surface-variant": "#e4e1ec",
+                        "surface": "#fcf8ff",
+                        "on-primary": "#ffffff",
+                        "secondary": "#7d5700",
+                        "secondary-fixed": "#ffdeab",
+                        "surface-container-highest": "#e4e1ec",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#10069f",
+                        "surface-dim": "#dbd8e4",
+                        "primary-fixed-dim": "#c0c1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "kiosk-padding": "40px",
+                        "tv-margin": "64px",
+                        "touch-target-min": "56px",
+                        "dashboard-gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "h1-kiosk": ["Plus Jakarta Sans"],
+                        "display-queue": ["Syne"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "h2-dashboard": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["12px", { "lineHeight": "100%", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "h1-kiosk": ["48px", { "lineHeight": "120%", "fontWeight": "700" }],
+                        "display-queue": ["120px", { "lineHeight": "110%", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "160%", "fontWeight": "400" }],
+                        "h2-dashboard": ["24px", { "lineHeight": "140%", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "150%", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcf8ff; color: #1b1b23; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-background">
+<!-- SideNavBar (Shared Component) -->
+<nav class="bg-surface-container dark:bg-surface-container-high h-screen w-64 docked left-0 bg-surface-container-low dark:bg-inverse-surface flat no shadows flex flex-col h-full py-dashboard-gutter px-4 shrink-0 hidden md:flex z-10">
+<div class="mb-8 px-4">
+<h2 class="font-h2-dashboard text-h2-dashboard text-primary mb-1">Gestión APE</h2>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase">Administrador</p>
+</div>
+<ul class="flex-1 space-y-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container font-bold rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">campaign</span>
+<span class="font-label-bold text-label-bold">Llamado de Turnos</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">sensor_window</span>
+<span class="font-label-bold text-label-bold">Gestión de Ventanillas</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-bold text-label-bold">Métricas de Saturación</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">settings_suggest</span>
+<span class="font-label-bold text-label-bold">Configuración</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto px-4">
+<button class="flex items-center justify-center gap-2 w-full py-3 text-on-surface border border-outline-variant rounded-lg hover:bg-surface-container-highest transition-colors font-label-bold text-label-bold">
+<span class="material-symbols-outlined">logout</span>
+                Cerrar Sesión
+            </button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface dark:bg-inverse-surface docked full-width top-0 border-b border-outline-variant dark:border-outline flat no shadows flex justify-between items-center w-full px-dashboard-gutter h-touch-target-min shrink-0 z-10 md:hidden">
+<h1 class="font-h2-dashboard text-h2-dashboard font-bold text-primary dark:text-inverse-primary">APE Turnos SENA</h1>
+<div class="flex items-center gap-4 text-primary dark:text-inverse-primary">
+<button class="hover:bg-surface-container dark:hover:bg-inverse-surface p-2 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:bg-surface-container dark:hover:bg-inverse-surface p-2 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="hover:bg-surface-container dark:hover:bg-inverse-surface p-2 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-8 h-8 bg-surface-variant rounded-full overflow-hidden ml-2">
+<img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByOPu9zr_EydOxkWMuNh_ubondyuzDLetBoPSAUoxu_vF2IGilM9EjnHlkkEBH5jon5qe7oDIynRtT5LPqgYvlLIG4ZmRvm4R3YK7BwIJnh8xB6sgRtP3Hn4fMHSEL9G6oPE14hQqw6zPctOYlenQfBgNxu4TNMy8z7Hrcw2KLDlmswErePgUAD8vFavfYw9o7nkW_F5o-VLz9GWmwJeOjWTNYatu9Vn3fe22yabF65dSqrui-oe6cSqSHwpK3xUc3WIAZwK4OjvCn"/>
+</div>
+</div>
+</header>
+<!-- TopNavBar for Desktop (Simplified version to sit beside sidebar) -->
+<header class="bg-surface docked full-width top-0 border-b border-outline-variant flat no shadows hidden md:flex justify-between items-center w-full px-dashboard-gutter h-touch-target-min shrink-0 z-10">
+<h1 class="font-h2-dashboard text-h2-dashboard font-bold text-primary">Resumen General</h1>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="hover:bg-surface-container p-2 rounded-full transition-colors duration-200 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-8 h-8 bg-surface-variant rounded-full overflow-hidden ml-2">
+<img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3gKqqD4oj6w5LGRKK6SmVgyZTe_AsDjft0FygPk5d2lPGtZeXh2wE9VXpNRTrIOGzdV2kzkfmx0jjfLQtwxGBFZiPkpgRnGdLuNqASvlQiczjlXNqwcQWOc23i3OYoPSkOWnx69uvPwFvQ6kiRViktGGnZqwrs4LCCZPPmoAsxu4Jz5tuiZryHLmuARuy691_sF56JoS2lvM-iwkZF7-tm4o4IJ41ulXOSZ3kesxHKXAG7PXjq6UmCjlDg7nhLMbq9VpTVvAIQhT2"/>
+</div>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<main class="flex-1 overflow-y-auto p-dashboard-gutter">
+<!-- KPIs Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-dashboard-gutter mb-dashboard-gutter">
+<!-- KPI 1 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-6 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Tiempo Promedio Espera</span>
+<span class="material-symbols-outlined text-outline">timer</span>
+</div>
+<div>
+<div class="font-display-queue text-[48px] leading-none text-primary">12<span class="text-h2-dashboard font-body-lg ml-1 text-on-surface-variant">min</span></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-[#1aba55]">arrow_downward</span>
+                            -2 min vs ayer
+                        </p>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-6 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Turnos Atendidos Hoy</span>
+<span class="material-symbols-outlined text-outline">group</span>
+</div>
+<div>
+<div class="font-display-queue text-[48px] leading-none text-primary">342</div>
+<div class="w-full bg-surface-variant h-2 rounded-full mt-4 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 75%"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 text-right">75% meta diaria</p>
+</div>
+</div>
+<!-- KPI 3 (Alert) -->
+<div class="bg-surface-bright rounded-xl border-2 border-secondary-container p-6 flex flex-col justify-between h-40 relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary-container opacity-10 rounded-full blur-xl"></div>
+<div class="flex justify-between items-start relative z-10">
+<span class="font-label-bold text-label-bold text-secondary uppercase tracking-wider">Alerta de Saturación</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="relative z-10">
+<div class="font-display-queue text-[48px] leading-none text-secondary">V-04</div>
+<p class="font-body-sm text-body-sm text-on-surface mt-2 font-bold">Ventanilla 4 presenta retrasos.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Promedio: 25 min/turno</p>
+</div>
+</div>
+</div>
+<!-- Main Bento Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-dashboard-gutter">
+<!-- Chart Area (Spans 8 cols) -->
+<div class="lg:col-span-8 bg-surface rounded-xl border border-outline-variant p-6 flex flex-col h-96">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-h2-dashboard text-h2-dashboard text-primary">Flujo de Usuarios por Hora</h3>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-body-sm font-label-bold bg-surface-container rounded-lg text-primary">Hoy</button>
+<button class="px-3 py-1 text-body-sm font-label-bold text-on-surface-variant hover:bg-surface-container-low rounded-lg">Semana</button>
+</div>
+</div>
+<!-- Faux Chart Representation -->
+<div class="flex-1 relative flex items-end justify-between pt-8 pb-4">
+<!-- Y-axis labels -->
+<div class="absolute left-0 top-0 bottom-8 flex flex-col justify-between text-body-sm text-on-surface-variant pr-4 border-r border-outline-variant">
+<span>100</span>
+<span>75</span>
+<span>50</span>
+<span>25</span>
+<span>0</span>
+</div>
+<!-- Bars -->
+<div class="ml-10 w-full flex justify-between items-end h-full px-2">
+<div class="flex flex-col items-center gap-2 w-1/12 group">
+<div class="w-full bg-surface-variant rounded-t-sm h-[20%] group-hover:bg-primary-fixed transition-colors relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-label-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">20</div>
+</div>
+<span class="text-body-sm text-on-surface-variant">8am</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-1/12 group">
+<div class="w-full bg-surface-variant rounded-t-sm h-[45%] group-hover:bg-primary-fixed transition-colors relative"></div>
+<span class="text-body-sm text-on-surface-variant">9am</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-1/12 group">
+<div class="w-full bg-primary rounded-t-sm h-[85%] group-hover:bg-primary-container transition-colors relative"></div>
+<span class="text-body-sm text-on-surface-variant font-bold">10am</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-1/12 group">
+<div class="w-full bg-surface-variant rounded-t-sm h-[60%] group-hover:bg-primary-fixed transition-colors relative"></div>
+<span class="text-body-sm text-on-surface-variant">11am</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-1/12 group">
+<div class="w-full bg-surface-variant rounded-t-sm h-[40%] group-hover:bg-primary-fixed transition-colors relative"></div>
+<span class="text-body-sm text-on-surface-variant">12pm</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-1/12 group">
+<div class="w-full bg-surface-variant rounded-t-sm h-[30%] group-hover:bg-primary-fixed transition-colors relative"></div>
+<span class="text-body-sm text-on-surface-variant">1pm</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-1/12 group">
+<div class="w-full bg-surface-variant rounded-t-sm h-[70%] group-hover:bg-primary-fixed transition-colors relative"></div>
+<span class="text-body-sm text-on-surface-variant">2pm</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-1/12 group">
+<div class="w-full bg-surface-variant rounded-t-sm h-[50%] group-hover:bg-primary-fixed transition-colors relative"></div>
+<span class="text-body-sm text-on-surface-variant">3pm</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Active Windows Map (Spans 4 cols) -->
+<div class="lg:col-span-4 bg-surface rounded-xl border border-outline-variant p-6 flex flex-col h-96">
+<h3 class="font-h2-dashboard text-h2-dashboard text-primary mb-6">Estado de Ventanillas</h3>
+<div class="flex-1 overflow-y-auto pr-2 space-y-3">
+<!-- Ventanilla 1 - Active -->
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-label-bold">V1</div>
+<div>
+<p class="font-body-sm text-on-surface font-bold">Información General</p>
+<p class="font-label-bold text-label-bold text-on-surface-variant">En atención: A-045</p>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-[#e6f4ea] px-2 py-1 rounded-full">
+<div class="w-2 h-2 rounded-full bg-[#1aba55]"></div>
+<span class="font-label-bold text-label-bold text-[#1aba55]">Activa</span>
+</div>
+</div>
+<!-- Ventanilla 2 - Active -->
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-label-bold">V2</div>
+<div>
+<p class="font-body-sm text-on-surface font-bold">Inscripciones</p>
+<p class="font-label-bold text-label-bold text-on-surface-variant">En atención: B-102</p>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-[#e6f4ea] px-2 py-1 rounded-full">
+<div class="w-2 h-2 rounded-full bg-[#1aba55]"></div>
+<span class="font-label-bold text-label-bold text-[#1aba55]">Activa</span>
+</div>
+</div>
+<!-- Ventanilla 3 - Inactive -->
+<div class="flex items-center justify-between p-3 bg-surface-container-highest rounded-lg opacity-75">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant text-outline flex items-center justify-center font-label-bold">V3</div>
+<div>
+<p class="font-body-sm text-on-surface font-bold text-outline">Orientación</p>
+<p class="font-label-bold text-label-bold text-outline">Sin operador</p>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-surface-variant px-2 py-1 rounded-full">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="font-label-bold text-label-bold text-outline">Inactiva</span>
+</div>
+</div>
+<!-- Ventanilla 4 - Saturated -->
+<div class="flex items-center justify-between p-3 bg-secondary-fixed rounded-lg border border-secondary-container">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-bold">V4</div>
+<div>
+<p class="font-body-sm text-on-surface font-bold">Casos Especiales</p>
+<p class="font-label-bold text-label-bold text-on-secondary-container">En atención: C-012 (28m)</p>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-secondary-container px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-label-bold text-label-bold text-on-secondary-container">Saturada</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

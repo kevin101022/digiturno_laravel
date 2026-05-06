@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kiosco de Calificación - Bienvenida</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#5f4100",
+                      "surface-container": "#efecf8",
+                      "outline": "#767685",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed": "#05006c",
+                      "inverse-surface": "#303038",
+                      "background": "#fcf8ff",
+                      "surface-bright": "#fcf8ff",
+                      "on-secondary-container": "#694900",
+                      "primary-container": "#10069f",
+                      "tertiary-container": "#630300",
+                      "on-surface-variant": "#464554",
+                      "on-secondary-fixed": "#271900",
+                      "outline-variant": "#c7c5d6",
+                      "on-tertiary-container": "#f16c58",
+                      "secondary": "#7d5700",
+                      "error-container": "#ffdad6",
+                      "on-background": "#1b1b23",
+                      "surface": "#fcf8ff",
+                      "on-tertiary": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "inverse-primary": "#c0c1ff",
+                      "tertiary-fixed": "#ffdad4",
+                      "inverse-on-surface": "#f2effa",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed-dim": "#ffb4a7",
+                      "on-tertiary-fixed-variant": "#871f13",
+                      "surface-tint": "#4a4dce",
+                      "secondary-fixed": "#ffdeab",
+                      "secondary-container": "#fdb300",
+                      "primary": "#050066",
+                      "error": "#ba1a1a",
+                      "surface-container-highest": "#e4e1ec",
+                      "on-surface": "#1b1b23",
+                      "surface-dim": "#dbd8e4",
+                      "primary-fixed": "#e1e0ff",
+                      "on-primary-container": "#858aff",
+                      "surface-container-low": "#f5f2fd",
+                      "secondary-fixed-dim": "#ffba30",
+                      "on-primary-fixed-variant": "#3032b5",
+                      "tertiary": "#3c0100",
+                      "surface-variant": "#e4e1ec",
+                      "on-tertiary-fixed": "#400100",
+                      "on-secondary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "surface-container-high": "#eae7f2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "touch-target-min": "56px",
+                      "tv-margin": "64px",
+                      "kiosk-padding": "40px",
+                      "dashboard-gutter": "16px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "h2-dashboard": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "h1-kiosk": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-queue": [
+                              "Syne"
+                      ],
+                      "body-sm": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-bold": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "h2-dashboard": [
+                              "24px",
+                              {
+                                      "lineHeight": "140%",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h1-kiosk": [
+                              "48px",
+                              {
+                                      "lineHeight": "120%",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-queue": [
+                              "120px",
+                              {
+                                      "lineHeight": "110%",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "150%",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "160%",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-bold": [
+                              "12px",
+                              {
+                                      "lineHeight": "100%",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface min-h-screen relative overflow-hidden flex flex-col items-center justify-center p-kiosk-padding selection:bg-primary-container selection:text-surface-container-lowest">
+<!-- Watermark Background -->
+<div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-[0.03] z-0">
+<img alt="Logo APE Marca de Agua" class="w-[80vw] max-w-[1000px] h-auto object-contain grayscale" data-alt="A highly detailed, stark minimalist corporate logo graphic designed for a large-format public kiosk display. The image features a solid, high-contrast monochrome emblem that embodies institutional authority and modern efficiency. Set against a pure white void, the logo's geometry is crisp and commanding. The lighting is completely flat, ensuring maximum legibility without shadows or gradients, perfect for a subtle background watermark effect in a clinical, professional setting." src="https://lh3.googleusercontent.com/aida/ADBb0uiAU6b38npSRc9hkZUV9PX5Rku3HPL24pC49pWeBbk_1XACtMZMczCdC8kAGXoDk629Ce80Grm7w4jK24rJw6MhM4aZv52XUQy_-MnFzKg_p-fisIGWyilaOmAcjWZlLxDuEcayHYeROAFIhfbmKgb270KU_hNOxcrzJTIiG_i1-az-HyLUkmJPSB6IfIKSr0ZJNMrByVFoaTF_q1geDId7JXK4CCclmBcfSLxusa2KiD6X2nDGeVgUkQYO"/>
+</div>
+<!-- Top Header Logo -->
+<header class="absolute top-tv-margin w-full flex justify-center z-10">
+<img alt="Logo APE Institucional" class="h-24 w-auto object-contain drop-shadow-sm" data-alt="A wide, panoramic institutional banner image displaying a crisp, high-definition corporate logo variant. The design is strictly modern and functional, utilizing deep blues and stark whites typical of government or official employment service branding. The layout is horizontal, optimized for the top header of a touch kiosk. The lighting is bright and even, conveying transparency and high-performance utility in a public service context." src="https://lh3.googleusercontent.com/aida/ADBb0ujDuO29AwOH3ZGbOIihtzBmcBMwHJ8LqLCfsAxOwJRfgbS2Rcpeti5a5r7O6p1koWSFknz9XgLFOagyR0ZYlKNedyHVHwgaespoWiQ1cbQulWTH_cpCB1jlgPl0NEnWy46vhYEZX7hioGo9dx9Rzt2rViNkfBSSwy-VTSXS_3m3xmxM6G2xjaG2yWB1J91AFSbnPkp1k7LDvH4A7TR7SyonT6G-JpSb0ArW4q_NcdyUMNWln7eu0z9QikZodIWfZ5D8MdFxtdzvFw"/>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 flex flex-col items-center justify-center text-center gap-tv-margin max-w-5xl w-full">
+<!-- Headline -->
+<h1 class="font-h1-kiosk text-h1-kiosk text-on-surface tracking-tight balance-text max-w-4xl">
+            ¿Fue atendido hoy?<br/>
+<span class="text-primary-container">Califica tu atención</span>
+</h1>
+<!-- Call to Action Button -->
+<button class="bg-primary-container text-surface-container-lowest font-h1-kiosk text-[36px] font-bold rounded-full py-8 px-16 flex items-center justify-center gap-6 shadow-xl shadow-primary-container/20 active:bg-primary active:scale-[0.98] transition-all duration-200 ease-out border border-primary-container hover:shadow-2xl hover:shadow-primary-container/30 group">
+<span class="material-symbols-outlined text-[48px] group-hover:scale-110 transition-transform duration-300" style="font-variation-settings: 'FILL' 1;">
+                touch_app
+            </span>
+            Comenzar Calificación
+        </button>
+</main>
+<!-- Bottom Decorative/Security Element (Optional but adds to the kiosk feel) -->
+<footer class="absolute bottom-kiosk-padding flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm opacity-60 z-10">
+<span class="material-symbols-outlined text-[16px]">
+            verified_user
+        </span>
+        Transacción segura y anónima
+    </footer>
+</body></html>

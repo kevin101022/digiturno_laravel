@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panel del Asesor - APE Turnos SENA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Syne:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#050066",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "outline": "#767685",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#303038",
+                        "surface-variant": "#e4e1ec",
+                        "inverse-primary": "#c0c1ff",
+                        "inverse-on-surface": "#f2effa",
+                        "secondary": "#7d5700",
+                        "on-primary-fixed": "#05006c",
+                        "on-tertiary-fixed-variant": "#871f13",
+                        "on-primary-fixed-variant": "#3032b5",
+                        "on-tertiary-fixed": "#400100",
+                        "on-background": "#1b1b23",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#10069f",
+                        "tertiary-fixed-dim": "#ffb4a7",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container": "#efecf8",
+                        "outline-variant": "#c7c5d6",
+                        "surface-container-high": "#eae7f2",
+                        "on-secondary-container": "#694900",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdeab",
+                        "on-surface": "#1b1b23",
+                        "surface-dim": "#dbd8e4",
+                        "on-tertiary-container": "#f16c58",
+                        "surface-bright": "#fcf8ff",
+                        "tertiary": "#3c0100",
+                        "tertiary-container": "#630300",
+                        "surface-container-low": "#f5f2fd",
+                        "surface-container-highest": "#e4e1ec",
+                        "secondary-fixed-dim": "#ffba30",
+                        "tertiary-fixed": "#ffdad4",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "background": "#fcf8ff",
+                        "surface-tint": "#4a4dce",
+                        "secondary-container": "#fdb300",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e1e0ff",
+                        "surface": "#fcf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#858aff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#271900",
+                        "on-surface-variant": "#464554"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "56px",
+                        "tv-margin": "64px",
+                        "kiosk-padding": "40px",
+                        "dashboard-gutter": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "h2-dashboard": ["Plus Jakarta Sans"],
+                        "display-queue": ["Syne"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "h1-kiosk": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "150%", "fontWeight": "400" }],
+                        "h2-dashboard": ["24px", { "lineHeight": "140%", "fontWeight": "600" }],
+                        "display-queue": ["120px", { "lineHeight": "110%", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "160%", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "100%", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "h1-kiosk": ["48px", { "lineHeight": "120%", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-sm min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="bg-surface-container dark:bg-surface-container-high h-screen w-64 docked left-0 flex flex-col h-full py-dashboard-gutter px-4 bg-surface-container-low dark:bg-inverse-surface flat no shadows shrink-0">
+<div class="flex items-center justify-center mb-8 px-2">
+<img alt="Logo APE SENA" class="w-full h-auto max-h-16 object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uisUQzRftTPxo7wzOF8qXgi1P3NDatpBrW9gs-Rek4Ll8CPZmVSGoTAg1pWhLlqswtBCik9VI7U_XMWoqPvx0mu4CAZgyW5G7HVYPENrudtl_hNhp1DpTXR1qdgdK0LP8WJLBG1LtdF93TZrhzAnl8VsQXzjCr-hE7ZW7AkXmvRlzXw8YrbtkJkiPJHlrqgGdgVGerLzGyDCU0Si6wy1Mpk2LOi0Sy9y_H2OGwh_C6hFuJy9E0_T0tTGuEW8j6JffEDBKkLrTvAEcU"/>
+</div>
+<ul class="flex flex-col gap-2 flex-grow m-0 p-0 list-none">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container font-bold rounded-lg active:scale-95 transition-all font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all font-label-bold text-label-bold rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+<span>Llamado de Turnos</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all font-label-bold text-label-bold rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="sensor_window">sensor_window</span>
+<span>Gestión de Ventanillas</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all font-label-bold text-label-bold rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Métricas de Saturación</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-variant active:scale-95 transition-all font-label-bold text-label-bold rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+<span>Configuración</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto">
+<button class="flex items-center gap-3 w-full px-4 py-3 text-error hover:bg-error-container active:scale-95 transition-all font-label-bold text-label-bold rounded-lg">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Cerrar Sesión</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-grow flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-inverse-surface docked full-width top-0 border-b border-outline-variant dark:border-outline flat no shadows flex justify-between items-center w-full px-dashboard-gutter h-touch-target-min shrink-0">
+<div class="flex items-center gap-4">
+<span class="font-h2-dashboard text-h2-dashboard font-bold text-primary dark:text-inverse-primary">APE Turnos SENA</span>
+<div class="hidden ml-8 flex items-center px-3 py-1 rounded-full bg-surface-container-low border border-outline-variant">
+<span class="w-2 h-2 rounded-full bg-[#10b981] mr-2 block"></span>
+<span class="font-label-bold text-label-bold text-on-surface">Disponible</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center px-4 py-1.5 rounded-full bg-surface-container-highest shadow-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-[#10b981] mr-2 block animate-pulse"></span>
+<span class="font-label-bold text-label-bold text-on-surface mr-4">Disponible</span>
+<span class="font-label-bold text-label-bold text-primary bg-primary-container text-on-primary-container px-2 py-0.5 rounded">Módulo 4</span>
+</div>
+<div class="flex gap-2 text-on-surface-variant dark:text-surface-variant">
+<button class="p-2 hover:bg-surface-container dark:hover:bg-inverse-surface rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container dark:hover:bg-inverse-surface rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-2 hover:bg-surface-container dark:hover:bg-inverse-surface rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+</div>
+<img alt="User profile avatar" class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A small, professional portrait photograph of an office worker, used as a digital profile avatar. The person is smiling warmly in a bright, modern corporate environment. The lighting is soft and flattering, highlighting a clean, friendly aesthetic suitable for an institutional enterprise application." src="https://lh3.googleusercontent.com/aida/ADBb0uiAU6b38npSRc9hkZUV9PX5Rku3HPL24pC49pWeBbk_1XACtMZMczCdC8kAGXoDk629Ce80Grm7w4jK24rJw6MhM4aZv52XUQy_-MnFzKg_p-fisIGWyilaOmAcjWZlLxDuEcayHYeROAFIhfbmKgb270KU_hNOxcrzJTIiG_i1-az-HyLUkmJPSB6IfIKSr0ZJNMrByVFoaTF_q1geDId7JXK4CCclmBcfSLxusa2KiD6X2nDGeVgUkQYO"/>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow p-dashboard-gutter overflow-y-auto bg-surface-container-low">
+<div class="max-w-5xl mx-auto h-full flex flex-col justify-center items-center">
+<div class="bg-surface rounded-xl border border-outline-variant p-10 flex flex-col items-center justify-center shadow-sm max-w-2xl w-full text-center">
+<div class="w-24 h-24 bg-primary-fixed rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-5xl fill" data-icon="support_agent" data-weight="fill">support_agent</span>
+</div>
+<h2 class="font-h1-kiosk text-h1-kiosk text-on-surface mb-4">Panel del Asesor</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-12 max-w-lg">
+                        Estás en estado <strong>Disponible</strong>. Haz clic en el botón de abajo para llamar al siguiente turno en la fila.
+                    </p>
+<button class="bg-primary text-on-primary font-h2-dashboard text-h2-dashboard font-bold py-6 px-16 rounded-full flex items-center gap-4 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm active:scale-[0.98]">
+<span class="material-symbols-outlined text-3xl" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+                        Aceptar Turno
+                    </button>
+<div class="mt-12 flex gap-8 items-center justify-center w-full border-t border-surface-container-highest pt-8">
+<div class="text-center">
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase mb-1">Turnos Atendidos</p>
+<p class="font-h2-dashboard text-h2-dashboard text-primary">12</p>
+</div>
+<div class="w-px h-12 bg-surface-container-highest"></div>
+<div class="text-center">
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase mb-1">Tiempo Promedio</p>
+<p class="font-h2-dashboard text-h2-dashboard text-primary">08:45</p>
+</div>
+<div class="w-px h-12 bg-surface-container-highest"></div>
+<div class="text-center">
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase mb-1">En Espera</p>
+<p class="font-h2-dashboard text-h2-dashboard text-secondary-container">24</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
