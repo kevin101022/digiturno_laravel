@@ -5,8 +5,7 @@ export type EstadoAsesor =
     | 'pausa'
     | 'dashboard'
     | 'ventanillas'
-    | 'metricas'
-    | 'configuracion';
+    | 'historial';
 
 export interface Ciudadano {
     id: string;
@@ -21,6 +20,13 @@ export interface TurnoActual {
     codigo: string;
     ciudadano: Ciudadano;
     hora_llamado: string;
+}
+
+export interface TurnoFila {
+    id: number;
+    turn_code: string;
+    category: string;
+    created_at: string;
 }
 
 export interface AsesorStats {

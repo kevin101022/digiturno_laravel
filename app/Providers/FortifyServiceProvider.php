@@ -31,6 +31,38 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        // Redirigir según el rol tras el login
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\LoginResponse::class,
+            fn () => new class implements \Laravel\Fortify\Contracts\LoginResponse {
+                public function toResponse($request) {
+                    $user = $request->user();
+                    
+                    // Supongamos que tienes un método hasRole o verificamos por el role_id que vimos antes
+                    // O más fácil, por el nombre del usuario para esta prueba:
+                    if (str_contains(strtolower($user->name), 'asesor')) {
+                        return redirect('/asesor');
+                    }
+                    
+                    if (str_contains(strtolower($user->name), 'coordinador')) {
+                        return redirect('/coordinador');
+                    }
+
+                    return redirect('/dashboard');
+                }
+            }
+        );
+
+        // Redirigir al login después de cerrar sesión
+        $this->app->singleton(
+            \Laravel\Fortify\Http\Responses\LogoutResponse::class,
+            fn () => new class implements \Laravel\Fortify\Contracts\LogoutResponse {
+                public function toResponse($request) {
+                    return redirect('/login');
+                }
+            }
+        );
     }
 
     /**

@@ -141,7 +141,7 @@ const TIPOS_DOC = ['Cédula de Ciudadanía', 'Tarjeta de Identidad', 'Cédula Ex
 export default function Login() {
     const { data, setData, post, processing, errors } = useForm({
         tipo_doc: 'Cédula de Ciudadanía',
-        numero_doc: '',
+        document_number: '',
         password: '',
         remember: false,
     });
@@ -203,13 +203,13 @@ export default function Login() {
                             />
 
                             <CustomInput
-                                id="numero_doc"
+                                id="document_number"
                                 label="Número de Documento"
                                 icon="material-symbols:badge"
                                 placeholder="Ej: 1020304050"
-                                value={data.numero_doc}
-                                onChange={e => setData('numero_doc', e.target.value)}
-                                error={errors.numero_doc}
+                                value={data.document_number}
+                                onChange={e => setData('document_number', e.target.value)}
+                                error={errors.document_number}
                             />
 
                             <CustomInput

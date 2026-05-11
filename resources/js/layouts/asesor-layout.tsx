@@ -27,26 +27,27 @@ export default function AsesorLayout({ children, title = 'Panel del Asesor', onT
                 <nav className="flex-1 px-4 py-2 space-y-2">
                     <NavItem 
                         icon="material-symbols:campaign" 
-                        label="Llamado de Turnos" 
+                        label="Atención de Turnos" 
                         active={['disponible', 'dashboard', 'atendiendo', 'validando_ruv'].includes(activeTab || '')} 
                         onClick={() => onTabChange?.('disponible')}
                     />
                     <NavItem 
-                        icon="material-symbols:analytics" 
-                        label="Métricas" 
-                        active={activeTab === 'metricas'}
-                        onClick={() => onTabChange?.('metricas')}
-                    />
-                    <NavItem 
-                        icon="material-symbols:settings" 
-                        label="Configuración" 
-                        active={activeTab === 'configuracion'} 
-                        onClick={() => onTabChange?.('configuracion')}
+                        icon="material-symbols:history" 
+                        label="Historial" 
+                        active={activeTab === 'historial'} 
+                        onClick={() => onTabChange?.('historial')}
                     />
                 </nav>
 
                 <div className="p-4 border-t border-[#e4e1ec]">
-                    <button className="flex items-center gap-3 w-full px-4 py-3 text-[#ba1a1a] hover:bg-[#ffdad6] rounded-lg transition-colors font-bold text-sm">
+                    <button 
+                        onClick={() => {
+                            import('@inertiajs/react').then(({ router }) => {
+                                router.post('/logout');
+                            });
+                        }}
+                        className="flex items-center gap-3 w-full px-4 py-3 text-[#ba1a1a] hover:bg-[#ffdad6] rounded-lg transition-colors font-bold text-sm"
+                    >
                         <Icon icon="material-symbols:logout" className="text-xl" />
                         <span>Cerrar Sesión</span>
                     </button>

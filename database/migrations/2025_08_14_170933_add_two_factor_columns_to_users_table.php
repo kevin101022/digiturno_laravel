@@ -1,34 +1,23 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
+/**
+ * Esta migración es un no-op: las columnas two_factor_* ya se crearon
+ * directamente en la migración base de users (0001_01_01_000000_create_users_table).
+ * Se mantiene el archivo para no romper el historial de migraciones de Fortify.
+ */
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->text('two_factor_secret')->after('password')->nullable();
-            $table->text('two_factor_recovery_codes')->after('two_factor_secret')->nullable();
-            $table->timestamp('two_factor_confirmed_at')->after('two_factor_recovery_codes')->nullable();
-        });
+        // Las columnas two_factor_secret, two_factor_recovery_codes y
+        // two_factor_confirmed_at ya existen en la tabla users.
+        // No se requiere ninguna acción adicional.
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn([
-                'two_factor_secret',
-                'two_factor_recovery_codes',
-                'two_factor_confirmed_at',
-            ]);
-        });
+        // No-op: no eliminamos columnas que son parte de la estructura base.
     }
 };

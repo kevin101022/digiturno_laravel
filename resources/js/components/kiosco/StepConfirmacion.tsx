@@ -80,10 +80,15 @@ export default function StepConfirmacion({ turno, countdown, onFinalizar }: Step
                     </span>
                 </div>
 
-                {/* Categoría */}
-                <p className="relative z-10 kiosco-body text-[#464554]">
-                    Categoría: <strong className="text-[#1b1b23]">{CATEGORIA_LABELS[turno.categoria]}</strong>
-                </p>
+                {/* Categoría y Datos Ciudadano */}
+                <div className="relative z-10 flex flex-col gap-1 items-center">
+                    <p className="kiosco-body text-[#464554]">
+                        Categoría: <strong className="text-[#1b1b23]">{CATEGORIA_LABELS[turno.categoria]}</strong>
+                    </p>
+                    <p className="kiosco-caption text-[#767685]">
+                        Ciudadano: <span className="font-semibold">{turno.nombre}</span> ({turno.documento})
+                    </p>
+                </div>
 
                 {/* Botón finalizar */}
                 <button

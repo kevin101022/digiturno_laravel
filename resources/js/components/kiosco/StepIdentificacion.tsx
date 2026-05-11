@@ -1,17 +1,19 @@
 import { Icon } from '@iconify/react';
 import type { TipoDocumento } from '@/types/kiosco';
 import { TIPO_DOCUMENTO_LABELS } from '@/types/kiosco';
+import TecladoAlfanumerico from './TecladoAlfanumerico';
 
-const TIPOS_DOC: TipoDocumento[] = ['CC', 'CE', 'TI'];
+const TIPOS_DOC: TipoDocumento[] = ['CC', 'TI', 'CE', 'PPT', 'PA'];
 
 const TECLAS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'backspace', '0', 'clear'] as const;
-type Tecla = (typeof TECLAS)[number];
+type Tecla = (typeof TECLAS)[number] | string;
 
 interface StepIdentificacionProps {
     tipoDocumento: TipoDocumento;
     numeroDocumento: string;
     cargando: boolean;
     puedeContinuar: boolean;
+    error?: string | null;
     onTipoDocumento: (tipo: TipoDocumento) => void;
     onTecla: (tecla: Tecla) => void;
     onAnterior: () => void;
@@ -21,13 +23,14 @@ interface StepIdentificacionProps {
 /**
  * Pantalla 2 del kiosco: identificación del ciudadano.
  * Columna izquierda: selección de tipo de documento + display del número.
- * Columna derecha: teclado numérico táctil 3×4.
+ * Columna derecha: teclado numérico o alfanumérico.
  */
 export default function StepIdentificacion({
     tipoDocumento,
     numeroDocumento,
     cargando,
     puedeContinuar,
+    error,
     onTipoDocumento,
     onTecla,
     onAnterior,
@@ -45,7 +48,7 @@ export default function StepIdentificacion({
                 />
                 <h1 className="kiosco-h1 text-[#050066]">Identificación del Ciudadano</h1>
                 <p className="kiosco-body text-[#464554] mt-2 max-w-2xl">
-                    Por favor, ingrese sus datos para continuar con su solicitud (mínimo 10 dígitos).
+                    Por favor, ingrese sus datos para continuar con su solicitud.
                 </p>
             </header>
 
@@ -60,7 +63,11 @@ export default function StepIdentificacion({
                             <select
                                 id="select-tipo-doc"
                                 value={tipoDocumento}
-                                onChange={(e) => onTipoDocumento(e.target.value as TipoDocumento)}
+                                onChange={(e) => {
+                                    onTipoDocumento(e.target.value as TipoDocumento);
+                                    // Limpiar el doc si cambiamos el tipo
+                                    onTecla('clear');
+                                }}
                                 className="kiosco-doc-btn w-full bg-[#efecf8] text-[#1b1b23] border-[#c7c5d6] appearance-none cursor-pointer pr-12 focus:border-[#10069F] focus:ring-2 focus:ring-[#10069F]/20 transition-all outline-none text-xl font-semibold"
                             >
                                 {TIPOS_DOC.map((tipo) => (
@@ -78,56 +85,80 @@ export default function StepIdentificacion({
                     {/* Display del número */}
                     <div className="flex flex-col gap-3">
                         <label className="kiosco-h2 text-[#1b1b23]">Número de Documento</label>
-                        <div className="h-20 w-full bg-white border-2 border-[#c7c5d6] rounded-xl flex items-center px-6 gap-2 overflow-hidden">
+                        <div
+                            className={[
+                                'h-20 w-full bg-white border-2 rounded-xl flex items-center px-6 gap-2 overflow-hidden transition-colors',
+                                error ? 'border-red-400' : 'border-[#c7c5d6]',
+                            ].join(' ')}
+                        >
                             <span className="text-[2.2rem] font-bold text-[#1b1b23] tracking-[0.1em] flex-1 text-center whitespace-nowrap overflow-hidden">
                                 {numeroDocumento}
                             </span>
                             <span className="w-[3px] h-10 bg-[#10069F] animate-pulse rounded-full flex-shrink-0" />
                         </div>
+
+                        {/* Mensaje de error del servidor */}
+                        {error && (
+                            <div
+                                role="alert"
+                                className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-4 py-3"
+                            >
+                                <Icon
+                                    icon="material-symbols:error-outline"
+                                    className="text-red-500 flex-shrink-0"
+                                    style={{ fontSize: '1.4rem' }}
+                                />
+                                <span className="text-red-700 text-base font-medium">{error}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Columna derecha: teclado numérico */}
+                {/* Columna derecha: teclado numérico o alfanumérico */}
                 <div className="flex flex-col items-center justify-center">
-                    <div className="grid grid-cols-3 gap-3 w-[340px]">
-                        {TECLAS.map((tecla) => {
-                            if (tecla === 'backspace') {
+                    {tipoDocumento === 'PA' ? (
+                        <TecladoAlfanumerico onTecla={onTecla} />
+                    ) : (
+                        <div className="grid grid-cols-3 gap-3 w-[340px]">
+                            {TECLAS.map((tecla) => {
+                                if (tecla === 'backspace') {
+                                    return (
+                                        <button
+                                            key={tecla}
+                                            id="tecla-backspace"
+                                            onClick={() => onTecla('backspace')}
+                                            className="kiosco-key kiosco-key-action"
+                                            aria-label="Borrar último dígito"
+                                        >
+                                            <Icon icon="material-symbols:backspace" className="text-[2rem]" />
+                                        </button>
+                                    );
+                                }
+                                if (tecla === 'clear') {
+                                    return (
+                                        <button
+                                            key={tecla}
+                                            id="tecla-borrar"
+                                            onClick={() => onTecla('clear')}
+                                            className="kiosco-key kiosco-key-action text-[1.1rem] font-semibold"
+                                        >
+                                            Borrar
+                                        </button>
+                                    );
+                                }
                                 return (
                                     <button
                                         key={tecla}
-                                        id="tecla-backspace"
-                                        onClick={() => onTecla('backspace')}
-                                        className="kiosco-key kiosco-key-action"
-                                        aria-label="Borrar último dígito"
+                                        id={`tecla-${tecla}`}
+                                        onClick={() => onTecla(tecla)}
+                                        className="kiosco-key"
                                     >
-                                        <Icon icon="material-symbols:backspace" className="text-[2rem]" />
+                                        {tecla}
                                     </button>
                                 );
-                            }
-                            if (tecla === 'clear') {
-                                return (
-                                    <button
-                                        key={tecla}
-                                        id="tecla-borrar"
-                                        onClick={() => onTecla('clear')}
-                                        className="kiosco-key kiosco-key-action text-[1.1rem] font-semibold"
-                                    >
-                                        Borrar
-                                    </button>
-                                );
-                            }
-                            return (
-                                <button
-                                    key={tecla}
-                                    id={`tecla-${tecla}`}
-                                    onClick={() => onTecla(tecla)}
-                                    className="kiosco-key"
-                                >
-                                    {tecla}
-                                </button>
-                            );
-                        })}
-                    </div>
+                            })}
+                        </div>
+                    )}
                 </div>
             </main>
 
@@ -137,6 +168,7 @@ export default function StepIdentificacion({
                     id="btn-anterior"
                     onClick={onAnterior}
                     className="kiosco-btn-secondary"
+                    disabled={cargando}
                 >
                     <Icon icon="material-symbols:arrow-back" className="text-[1.8rem]" />
                     <span>Anterior</span>

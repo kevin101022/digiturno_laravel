@@ -1,14 +1,15 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Icon } from '@iconify/react';
+import { router } from '@inertiajs/react';
+import axios from 'axios';
 import AsesorLayout from '@/layouts/asesor-layout';
-import PantallaDisponible from '@/components/asesor/PantallaDisponible';
+import PantallaFilaTurnos from '@/components/asesor/PantallaFilaTurnos';
 import PantallaTurnoAsignado from '@/components/asesor/PantallaTurnoAsignado';
 import PantallaRuv from '@/components/asesor/PantallaRuv';
 import PantallaPausa from '@/components/asesor/PantallaPausa';
-import PantallaDashboard from '@/components/asesor/PantallaDashboard';
-import PantallaVentanillas from '@/components/asesor/PantallaVentanillas';
 import PantallaMetricas from '@/components/asesor/PantallaMetricas';
-import type { EstadoAsesor, TurnoActual, AsesorStats } from '@/types/asesor';
+import PantallaHistorial from '@/components/asesor/PantallaHistorial';
+import type { EstadoAsesor, TurnoActual, AsesorStats, TurnoFila } from '@/types/asesor';
 
 interface Props {
     stats: AsesorStats;
@@ -17,10 +18,10 @@ interface Props {
 export default function AsesorIndex({ stats: initialStats }: Props) {
     const [estado, setEstado] = useState<EstadoAsesor>('disponible');
     const [turnoActual, setTurnoActual] = useState<TurnoActual | null>(null);
+    const [turnosFila, setTurnosFila] = useState<TurnoFila[]>([]);
     const [stats, setStats] = useState<AsesorStats>(initialStats);
     const [feedback, setFeedback] = useState<{ show: boolean, message: string, icon: string, color: string } | null>(null);
 
-    // Helper para mostrar feedback temporal
     const showFeedback = (message: string, icon: string, color: string, duration: number = 2000, callback?: () => void) => {
         setFeedback({ show: true, message, icon, color });
         setTimeout(() => {
@@ -29,49 +30,98 @@ export default function AsesorIndex({ stats: initialStats }: Props) {
         }, duration);
     };
 
-    // Simulación: Llamar siguiente turno
-    const handleLlamarTurno = useCallback(() => {
-        const mockTurno: TurnoActual = {
-            id: '1',
-            codigo: 'G-115',
-            hora_llamado: new Date().toLocaleTimeString(),
-            ciudadano: {
-                id: '123',
-                nombre: 'Juan Pérez García',
-                documento: '1.234.567.890',
-                tipo_documento: 'CC',
-                categoria: 'general'
+    // POLLING: Consultar la fila de turnos en espera.
+    useEffect(() => {
+        if (estado !== 'disponible') return;
+
+        const fetchTurnos = async () => {
+            try {
+                const response = await axios.get('/asesor/turnos-en-espera');
+                setTurnosFila(response.data.turnos);
+            } catch (error) {
+                console.error('Error consultando fila:', error);
             }
         };
-        
-        setTurnoActual(mockTurno);
-        setEstado('atendiendo');
+
+        fetchTurnos(); // Consulta inicial
+        const interval = setInterval(fetchTurnos, 3000);
+
+        return () => clearInterval(interval);
+    }, [estado]);
+
+    const handleAceptarTurno = useCallback(async (turnId: number) => {
+        try {
+            const response = await axios.post(`/asesor/aceptar/${turnId}`);
+            if (response.data.success) {
+                const data = response.data.turno;
+                setTurnoActual({
+                    id: data.id,
+                    codigo: data.turn_code,
+                    hora_llamado: new Date().toLocaleTimeString(),
+                    ciudadano: {
+                        id: 'N/A',
+                        nombre: 'Ciudadano asignado',
+                        documento: 'Verificar en físico',
+                        tipo_documento: 'CC',
+                        categoria: data.categoria
+                    }
+                });
+                setEstado('atendiendo');
+                showFeedback('Turno Llamado a Ventanilla', 'material-symbols:campaign', '#10069f');
+            }
+        } catch (error) {
+            console.error('Error al aceptar turno:', error);
+            showFeedback('El turno ya fue asignado a otro asesor', 'material-symbols:error', '#ba1a1a', 3000);
+            // Refrescar fila
+            const res = await axios.get('/asesor/turnos-en-espera');
+            setTurnosFila(res.data.turnos);
+        }
     }, []);
 
     const handleIniciarAtencion = useCallback(() => {
-        if (turnoActual?.ciudadano.categoria === 'victim') {
-            setEstado('validando_ruv');
-        } else {
-            console.log('Atención iniciada...');
-        }
+        if (!turnoActual) return;
+        router.post(`/asesor/iniciar/${turnoActual.id}`, {}, {
+            onSuccess: () => {
+                if (turnoActual.ciudadano.categoria === 'victim') {
+                    setEstado('validando_ruv');
+                } else {
+                    showFeedback('Atención Iniciada', 'material-symbols:play-circle', '#10069f');
+                }
+            }
+        });
     }, [turnoActual]);
 
     const handleFinalizarAtencion = useCallback(() => {
-        showFeedback('Atención Finalizada', 'material-symbols:check-circle', '#22c55e', 3000, () => {
-            setEstado('disponible');
-            setTurnoActual(null);
-            setStats(prev => ({ ...prev, atendidos_hoy: prev.atendidos_hoy + 1 }));
+        if (!turnoActual) return;
+        router.post(`/asesor/finalizar/${turnoActual.id}`, {}, {
+            onSuccess: () => {
+                showFeedback('Atención Finalizada', 'material-symbols:check-circle', '#22c55e', 3000, () => {
+                    setEstado('disponible');
+                    setTurnoActual(null);
+                    setStats(prev => ({ ...prev, atendidos_hoy: prev.atendidos_hoy + 1 }));
+                });
+            }
         });
-    }, []);
+    }, [turnoActual]);
 
     const handleNoPresentado = useCallback(() => {
-        setEstado('disponible');
-        setTurnoActual(null);
-    }, []);
+        if (!turnoActual) return;
+        router.post(`/asesor/ausente/${turnoActual.id}`, {}, {
+            onSuccess: () => {
+                setEstado('disponible');
+                setTurnoActual(null);
+            }
+        });
+    }, [turnoActual]);
 
     const handleReLlamar = useCallback(() => {
-        showFeedback('Re-llamando Ciudadano', 'material-symbols:campaign', '#10069f', 2000);
-    }, []);
+        if (!turnoActual) return;
+        router.post(`/asesor/rellamar/${turnoActual.id}`, {}, {
+            onSuccess: () => {
+                showFeedback('Re-llamando Ciudadano', 'material-symbols:campaign', '#10069f', 2000);
+            }
+        });
+    }, [turnoActual]);
 
     return (
         <AsesorLayout 
@@ -79,7 +129,7 @@ export default function AsesorIndex({ stats: initialStats }: Props) {
             onTabChange={setEstado}
             activeTab={estado}
         >
-            {/* Modal de Feedback Temporal */}
+            {/* Modal de Feedback */}
             {feedback?.show && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#1b1b23]/40 backdrop-blur-sm animate-in fade-in duration-300">
                     <div className="bg-white p-8 rounded-3xl shadow-2xl border border-[#c7c5d6] flex flex-col items-center gap-4 scale-in-center animate-in zoom-in duration-300 min-w-[300px]">
@@ -90,18 +140,23 @@ export default function AsesorIndex({ stats: initialStats }: Props) {
                             <Icon icon={feedback.icon} className="text-5xl" />
                         </div>
                         <h3 className="text-xl font-bold text-[#1b1b23]">{feedback.message}</h3>
-                        <div className="w-full bg-[#efecf8] h-1.5 rounded-full overflow-hidden mt-2">
-                            <div 
-                                className="h-full animate-progress"
-                                style={{ backgroundColor: feedback.color }}
-                            ></div>
-                        </div>
                     </div>
                 </div>
             )}
-            {/* Flujo de Atención (El que te gusta) */}
+
             {estado === 'disponible' && (
-                <PantallaDisponible stats={stats} onLlamarTurno={handleLlamarTurno} />
+                <PantallaFilaTurnos 
+                    turnos={turnosFila}
+                    onAceptarTurno={handleAceptarTurno}
+                    onTomarPausa={async () => {
+                        try {
+                            await axios.post('/asesor/pausa', { reason: 'Descanso' });
+                            setEstado('pausa');
+                        } catch (error) {
+                            console.error('Error al tomar pausa:', error);
+                        }
+                    }}
+                />
             )}
             
             {estado === 'atendiendo' && turnoActual && (
@@ -119,30 +174,19 @@ export default function AsesorIndex({ stats: initialStats }: Props) {
             )}
 
             {estado === 'pausa' && (
-                <PantallaPausa onTerminarPausa={() => setEstado('disponible')} />
+                <PantallaPausa onTerminarPausa={async () => {
+                    try {
+                        await axios.post('/asesor/pausa');
+                        setEstado('disponible');
+                    } catch (error) {
+                        console.error('Error al terminar pausa:', error);
+                        setEstado('disponible'); // Fallback
+                    }
+                }} />
             )}
 
-            {/* Secciones Operativas Restantes */}
-            {estado === 'metricas' && (
-                <PantallaMetricas />
-            )}
-            {estado === 'configuracion' && (
-                <div className="p-10 bg-white rounded-2xl border border-[#c7c5d6] text-center">
-                    <Icon icon="material-symbols:settings" className="text-6xl text-[#10069f] mb-4 mx-auto" />
-                    <h2 className="text-2xl font-bold">Configuración del Perfil</h2>
-                    <p className="text-[#464554]">Ajustes de estación de trabajo y preferencias del asesor.</p>
-                </div>
-            )}
-
-            {/* Botón flotante para Pausa (Solo en modo disponible) */}
-            {estado === 'disponible' && (
-                <button 
-                    onClick={() => setEstado('pausa')}
-                    className="fixed bottom-8 right-8 bg-[#1b1b23] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform flex items-center gap-2 px-6 z-50"
-                >
-                    <Icon icon="material-symbols:coffee" className="text-xl text-[#fdb300]" />
-                    <span className="text-xs font-bold uppercase tracking-wider">Tomar Pausa</span>
-                </button>
+            {estado === 'historial' && (
+                <PantallaHistorial />
             )}
         </AsesorLayout>
     );

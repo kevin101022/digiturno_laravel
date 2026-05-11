@@ -58,9 +58,32 @@ final class KioscoController extends Controller
     {
         $validated = $request->validate([
             'categoria'        => ['required', 'in:victim,priority,business,general'],
-            'tipo_documento'   => ['required', 'in:CC,CE,TI'],
-            'numero_documento' => ['required', 'string', 'min:5', 'max:12', 'regex:/^\d+$/'],
+            'tipo_documento'   => ['required', 'in:CC,TI,CE,PPT,PA'],
+            'numero_documento' => ['required', 'string', function ($attribute, $value, $fail) use ($request) {
+                // Remover puntos si vienen (por si acaso el teclado físico los envía)
+                $value = str_replace('.', '', $value);
+                
+                $tipo = $request->input('tipo_documento');
+                $isValid = match ($tipo) {
+                    'CC' => preg_match('/^[0-9]{5,10}$/', $value),
+                    'TI' => preg_match('/^[0-9]{10,11}$/', $value),
+                    'CE', 'PPT' => preg_match('/^[0-9]{6,8}$/', $value),
+                    'PA' => preg_match('/^[A-Za-z0-9]{6,16}$/', $value),
+                    default => false,
+                };
+                
+                if (!$isValid) {
+                    $fail("La longitud o el formato del documento no son válidos para $tipo.");
+                }
+            }],
         ]);
+
+        // Asegurar que guardamos sin puntos
+        $validated['numero_documento'] = str_replace('.', '', $validated['numero_documento']);
+        
+        // Convertir a mayúsculas para pasaportes
+        $validated['numero_documento'] = strtoupper($validated['numero_documento']);
+
 
         $turno = DB::transaction(function () use ($validated): Turn {
             $usuario = $this->buscarOCrearCiudadano(
@@ -68,13 +91,17 @@ final class KioscoController extends Controller
                 $validated['numero_documento'],
             );
 
-            return $this->crearTurno($usuario->id, $validated['categoria']);
+            $nuevoTurno = $this->crearTurno($usuario->id, $validated['categoria']);
+
+            return $nuevoTurno;
         });
 
-        return back()->with('turno', [
-            'turn_code' => $turno->turn_code,
-            'categoria' => $validated['categoria'],
+        return to_route('kiosco.index')->with('turno', [
+            'turn_code'  => $turno->turn_code,
+            'categoria'  => $validated['categoria'],
             'queue_type' => $turno->queue_type,
+            'documento'  => $turno->user->document_number,
+            'nombre'     => $turno->user->name,
         ]);
     }
 
