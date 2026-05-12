@@ -39,7 +39,7 @@ export default function DisplayFooter({ stats }: Props) {
                 
                 <div className="hidden lg:block h-6 w-px bg-[#c7c5d6]"></div>
                 
-                <span className="font-['Plus_Jakarta_Sans'] text-[10px] lg:text-[12px] font-bold text-[#464554] uppercase tracking-widest text-center w-full lg:w-auto mt-2 lg:mt-0">
+                <span className="font-['Plus_Jakarta_Sans'] text-[9px] md:text-[11px] lg:text-[12px] font-bold text-[#464554] uppercase tracking-widest text-center w-full lg:w-auto mt-1 lg:mt-0">
                     SENA - Agencia Pública de Empleo | 2026
                 </span>
             </div>

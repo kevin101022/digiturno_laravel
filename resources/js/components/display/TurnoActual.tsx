@@ -20,9 +20,9 @@ export default function TurnoActual({ turno }: Props) {
             </div>
 
             {/* Main Turn Number */}
-            <div className="text-center mb-10 lg:mb-16 relative">
+            <div className="text-center mb-6 lg:mb-10 2xl:mb-16 relative">
                 <div className="absolute -inset-10 bg-[#e1e0ff] opacity-10 blur-3xl rounded-full"></div>
-                <h1 className="font-['Syne'] text-[#fdb300] drop-shadow-2xl relative z-10 font-bold text-[120px] lg:text-[160px] 2xl:text-[200px]" style={{ lineHeight: '1' }}>
+                <h1 className="font-['Syne'] text-[#fdb300] drop-shadow-2xl relative z-10 font-bold text-[80px] md:text-[100px] lg:text-[140px] 2xl:text-[180px]" style={{ lineHeight: '1' }}>
                     {turno.codigo}
                 </h1>
             </div>

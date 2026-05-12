@@ -33,10 +33,10 @@ export default function SidebarUltimosLlamados({ turnos }: Props) {
                             className={`bg-white rounded-xl p-4 lg:p-6 shadow-sm border border-[#c7c5d6] flex items-center justify-between ${opacityClass}`}
                         >
                             <div>
-                                <p className={`font-['Syne'] text-[32px] lg:text-[40px] 2xl:text-[48px] font-bold leading-none ${textColor}`}>
+                                <p className={`font-['Syne'] text-[28px] md:text-[32px] lg:text-[40px] 2xl:text-[48px] font-bold leading-none ${textColor}`}>
                                     {turno.codigo}
                                 </p>
-                                <p className="font-['Plus_Jakarta_Sans'] text-[14px] lg:text-[16px] 2xl:text-[18px] text-[#464554] mt-1 lg:mt-2">
+                                <p className="font-['Plus_Jakarta_Sans'] text-[12px] md:text-[14px] lg:text-[16px] 2xl:text-[18px] text-[#464554] mt-1">
                                     {turno.modulo}
                                 </p>
                             </div>

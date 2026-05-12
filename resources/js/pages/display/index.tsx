@@ -80,7 +80,7 @@ export default function DisplayIndex({ turnoActual, ultimosLlamados, stats }: Pr
     }, []);
 
     return (
-        <div className="w-screen h-screen overflow-hidden flex flex-col bg-[#fcf8ff] text-[#1b1b23]">
+        <div className="fixed inset-0 w-full h-full overflow-hidden flex flex-col bg-[#fcf8ff] text-[#1b1b23]">
             <Head title="APE Turnos - Sala de Espera" />
 
             {/* Header / Logo Area */}
@@ -93,7 +93,7 @@ export default function DisplayIndex({ turnoActual, ultimosLlamados, stats }: Pr
             </header>
 
             {/* Main TV Layout Content */}
-            <main className="flex-grow flex flex-col md:flex-row w-full overflow-hidden">
+            <main className="flex-1 flex flex-col md:flex-row w-full overflow-hidden">
                 {turnoActual ? (
                     <>
                         <TurnoActual turno={turnoActual} />
@@ -101,8 +101,8 @@ export default function DisplayIndex({ turnoActual, ultimosLlamados, stats }: Pr
                     </>
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-[#10069f] text-white">
-                        <h1 className="text-[48px] font-bold font-['Plus_Jakarta_Sans']">SENA - Agencia Pública de Empleo</h1>
-                        <p className="text-[24px] text-[#c0c1ff] mt-4 font-['Plus_Jakarta_Sans']">No hay turnos activos en este momento.</p>
+                        <h1 className="text-[32px] md:text-[48px] font-bold font-['Plus_Jakarta_Sans'] text-center px-4">SENA - Agencia Pública de Empleo</h1>
+                        <p className="text-[18px] md:text-[24px] text-[#c0c1ff] mt-4 font-['Plus_Jakarta_Sans']">No hay turnos activos en este momento.</p>
                     </div>
                 )}
             </main>
