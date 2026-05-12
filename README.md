@@ -122,7 +122,7 @@ Ve todos los turnos **excepto** los de Víctima (General, Empresario, Prioritari
 
 ### 3. Asesor de Población Víctima
 
-Ve **exclusivamente** los turnos de categoría Víctima.
+Rol híbrido: Ve **TODOS** los turnos de la fila para apoyar la operación general, pero es el **ÚNICO** habilitado para visualizar y atender turnos de la categoría Víctima.
 
 - **Tipo de Documento**: Cédula de Ciudadanía
 - **Número de Documento**: `2000000002`
@@ -161,3 +161,64 @@ El sistema cuenta con un blindaje avanzado a nivel de base de datos y lógica de
 5. **Prueba de Estrés Logística**: Se recomienda simular una sala de espera llena (varios asesores conectados y pantallas en vivo) lanzando al menos 20 turnos de prueba continuos, para asegurar que la latencia de la red institucional (SENA) soporta el Polling de llamadas en tiempo real.
 6. **Monitoreo de Calidad en Vivo**: El Coordinador ahora visualiza el promedio de *Calificación* (estrellas) de sus asesores directamente en la tabla de rendimiento. Esto se calcula en tiempo real a partir de las votaciones hechas por la ciudadanía en el Kiosco de Feedback.
 7. **Cierre de Sesión Seguro (Event Listener)**: Se implementó un rastreador en el ciclo de vida de la aplicación. Cuando un asesor hace clic en "Cerrar Sesión", el sistema automáticamente cambia su disponibilidad a rojo (Inactivo) y, si tenía el cronómetro de una pausa activa, la finaliza milimétricamente. Esto evita "asesores fantasma" activos en el panel del coordinador.
+
+---
+
+# 📘 Especificaciones Detalladas del Sistema
+
+## 1. Módulo del Asesor (Operación de Ventanilla)
+El panel del asesor es el centro operativo donde se gestiona el flujo de ciudadanos de manera controlada.
+
+### Funcionalidades Core:
+- **Gestión de Fila (Pull Architecture)**: El sistema no impone turnos. El asesor visualiza la lista de ciudadanos en espera en tiempo real y debe pulsar manualmente el botón **"Aceptar"** para llamar a un usuario.
+- **Control de Atención**: Una vez aceptado el turno, el asesor dispone de controles para:
+    - **Llamar / Volver a Llamar**: Activa el anuncio sonoro y visual en las pantallas de la sala (TV).
+    - **Iniciar Atención**: Activa el cronómetro de tiempo de servicio (`TMO`) que se registra para las métricas del coordinador.
+    - **No Presentado**: Permite cerrar el turno si el ciudadano no acude tras el llamado, registrando el evento como "Ausente".
+    - **Finalizar**: Cierra la atención y registra la duración exacta del servicio.
+- **Validación RUV**: Para el caso específico de atención a víctimas, el sistema despliega una pantalla obligatoria de validación antes de permitir el cierre del turno.
+- **Pausas Administrativas**: Los asesores pueden entrar en estado de pausa (Almuerzo, Baño, Capacitación), lo cual bloquea su visibilidad en el dashboard del coordinador como "ocupado" y detiene la recepción de turnos.
+
+### Restricciones de Acceso por Categoría:
+- **Asesor General**: El sistema filtra la base de datos para que **nunca** vea turnos de la categoría *Víctima*. Solo gestiona General, Prioritario y Empresarial.
+- **Asesor de Víctimas**: Es un perfil especializado que puede ver **toda la fila** (para no quedar ocioso si no hay víctimas), pero es el **único** que tiene permiso para visualizar y llamar a ciudadanos de la categoría *Víctima*.
+
+---
+
+## 2. Kiosco de Generación y Feedback (Ciudadano)
+Diseñado para terminales táctiles de autoservicio.
+
+### Generación de Turnos:
+- **Validación de Identidad**: El sistema consulta la base de datos de usuarios y valida longitudes de documentos según el tipo (Cédula, Pasaporte, etc.) mediante teclados virtuales adaptativos.
+- **Clasificación Automática**: Al elegir una categoría (ej. Víctima), el backend genera un código alfanumérico (V-001) y lo inserta en la cola de espera con prioridad alta.
+- **Impresión/Visualización**: El ciudadano recibe su código y su posición estimada en la fila.
+
+### Módulo de Calidad (Feedback):
+- **Filtro de Seguridad**: Solo permite calificar si existe un turno **finalizado hoy** para el documento ingresado.
+- **Verificación**: Muestra el nombre y módulo del asesor que realizó la atención para que el ciudadano confirme a quién está calificando.
+- **Impacto Directo**: La calificación alimenta los indicadores de gestión del coordinador de manera inmediata.
+
+---
+
+## 3. Módulo del Coordinador (Administración y Control)
+Interfaz de alto nivel para la toma de decisiones basada en datos.
+
+### Inteligencia de Negocio (Dashboard):
+- **Alertas Proactivas**: El sistema genera alertas visuales si:
+    - Un ciudadano espera más de lo permitido (TEE).
+    - La sala está saturada (Relación Turnos/Asesores alta).
+    - No hay asesores atendiendo a pesar de tener gente en fila.
+- **Mesa de Trabajo**: Herramienta para asignar asesores a módulos físicos según la jornada (Mañana/Tarde). Incluye protección contra cambios no guardados.
+- **Análisis de Rendimiento**: Gráficas de barras y líneas que comparan la atención real vs la proyectada, permitiendo ajustar los parámetros de la oficina.
+
+---
+
+## 4. Arquitectura del Backend y Lógica de Negocio
+- **Tecnología**: PHP 8.3 + Laravel 11.
+- **Seguridad**: Autenticación basada en sesiones seguras con protección contra ataques CSRF y XSS.
+- **Base de Datos**: 
+    - **Turns**: Gestiona el estado (`waiting`, `called`, `completed`, `absent`) y la prioridad de los turnos.
+    - **Attendances**: Tabla de hechos que registra cada segundo de atención y ausentismo.
+    - **DisplayEvents**: Cola de mensajes para sincronizar las TVs de la sala.
+- **Sincronización (Polling)**: Debido a las restricciones comunes en redes institucionales para WebSockets, el sistema utiliza un motor de polling asíncrono optimizado que consulta el estado del servidor cada 3-5 segundos, garantizando alta fidelidad sin sobrecargar la infraestructura.
+- **Zonas Horarias**: El backend fuerza `America/Bogota` para garantizar que los reportes diarios no se mezclen con datos de días anteriores por desfases de servidor UTC.

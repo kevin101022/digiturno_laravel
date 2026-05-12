@@ -9,6 +9,7 @@ use App\Models\Attendance;
 use App\Models\Module;
 use App\Models\ModuleAssignment;
 use App\Models\Pause;
+use App\Models\Feedback;
 use App\Models\Turn;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -389,13 +390,14 @@ class CoordinadorController extends Controller
             };
 
             if ($estado === 'atendiendo' && !$turnoCode) {
-                $calledTurn = \App\Models\Turn::where('status', 'called')
+                $calledTurn = Turn::where('status', 'called')
                     ->whereHas('displayEvents', fn($q) => $q->where('advisor_id', $asesor->id)->latest())
                     ->latest()->first();
                 if ($calledTurn) {
                     $turnoCode = $calledTurn->turn_code;
                 }
             }
+
 
             $nombreCompleto = trim($asesor->first_name . ' ' . $asesor->last_name);
             $partes         = explode(' ', $nombreCompleto);
@@ -519,7 +521,7 @@ class CoordinadorController extends Controller
 
                 $pausasMin = (int) round($pausasSegHoy / 60);
 
-                $calificacion = \App\Models\Feedback::where('advisor_id', $asesor->id)
+                $calificacion = Feedback::where('advisor_id', $asesor->id)
                     ->whereDate('session_date', today())
                     ->avg('rating');
 
@@ -535,7 +537,7 @@ class CoordinadorController extends Controller
                     'tmo'          => sprintf('%02d:%02d', floor($tmaAsesorSeg / 60), (int)$tmaAsesorSeg % 60),
                     'pausas'       => "{$pausasHoy} ({$pausasMin}m)",
                     'calificacion' => $calificacion ? number_format($calificacion, 1) : '5.0',
-                    'estado'       => $pausasHoy > 0 && \App\Models\Pause::where('user_id', $asesor->id)->whereNull('ended_at')->exists() 
+                    'estado'       => $pausasHoy > 0 && Pause::where('user_id', $asesor->id)->whereNull('ended_at')->exists() 
                         ? 'en pausa' 
                         : (in_array($detail?->availability_status, ['green', 'yellow']) ? 'activo' : 'inactivo'),
                 ];

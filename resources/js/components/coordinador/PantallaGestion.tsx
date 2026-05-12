@@ -44,6 +44,7 @@ const C = {
     success:     '#137333',
     successBg:   '#e6f4ea',
     dim:         '#dbd8e4',
+    errorBg:     '#fdecea',
 } as const;
 
 const TIPO_COLORS: Record<string, { bg: string; text: string }> = {

@@ -11,6 +11,7 @@ use App\Models\Pause;
 use App\Models\AdvisorDetail;
 use App\Models\ModuleAssignment;
 use App\Models\DisplayEvent;
+use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,7 @@ class AsesorController extends Controller
         $segundos = $promedioSegundos % 60;
         $tiempoPromedio = sprintf('%02d:%02d', $minutos, $segundos);
         
-        $calificacion = \App\Models\Feedback::where('advisor_id', $user->id)
+        $calificacion = Feedback::where('advisor_id', $user->id)
             ->whereDate('session_date', today())
             ->avg('rating');
 
@@ -57,7 +58,7 @@ class AsesorController extends Controller
         ];
 
         // Obtener el módulo asignado
-        $detail = \App\Models\AdvisorDetail::where('user_id', $user->id)->first();
+        $detail = AdvisorDetail::where('user_id', $user->id)->first();
         $assignedModule = $detail ? $detail->module_number : null;
 
         return Inertia::render('asesor/index', [
@@ -72,18 +73,16 @@ class AsesorController extends Controller
     public function turnosEnEspera(Request $request): JsonResponse
     {
         $user = $request->user();
-        $detail = \App\Models\AdvisorDetail::where('user_id', $user->id)->first();
+        $detail = AdvisorDetail::where('user_id', $user->id)->first();
         $isVictimAdvisor = $detail && $detail->advisor_type_id == 1; // 1 = victim_population
 
-        $query = \App\Models\Turn::where('status', 'waiting');
+        $query = Turn::where('status', 'waiting');
 
-        if ($isVictimAdvisor) {
-            // Asesor de víctimas: solo ve víctimas
-            $query->where('category', 'victim');
-        } else {
+        if (!$isVictimAdvisor) {
             // Asesor general: ve todos menos víctimas
             $query->where('category', '!=', 'victim');
         }
+        // El asesor de víctimas no tiene filtro, por lo que ve TODOS los turnos (incluyendo víctimas).
 
         $turnos = $query->orderByRaw("FIELD(category, 'victim', 'special', 'general', 'business')")
             ->orderBy('created_at', 'asc')
@@ -97,7 +96,7 @@ class AsesorController extends Controller
     /**
      * El asesor acepta manualmente un turno de la lista.
      */
-    public function aceptarTurno(Request $request, $turnId)
+    public function aceptarTurno(Request $request, int $turnId)
     {
         $user = $request->user();
 
@@ -110,7 +109,7 @@ class AsesorController extends Controller
         
         $module = $detail->module_number;
 
-        $turno = \App\Models\Turn::where('id', $turnId)->where('status', 'waiting')->lockForUpdate()->first();
+        $turno = Turn::where('id', $turnId)->where('status', 'waiting')->lockForUpdate()->first();
 
         if (!$turno) {
             return response()->json(['error' => 'El turno ya fue asignado o no existe.'], 409);
@@ -232,7 +231,7 @@ class AsesorController extends Controller
 
             // El asesor queda libre (verde) e intenta recibir el siguiente turno
             $detail->update(['availability_status' => 'green']);
-            \App\Services\TurnAssignmentService::asignarSiguienteTurnoAAsesor($detail);
+            // \App\Services\TurnAssignmentService::asignarSiguienteTurnoAAsesor($detail);
         });
 
         return back()->with('message', 'Atención finalizada con éxito.');
@@ -273,7 +272,7 @@ class AsesorController extends Controller
 
             // El asesor queda libre (verde) e intenta recibir el siguiente turno
             $detail->update(['availability_status' => 'green']);
-            \App\Services\TurnAssignmentService::asignarSiguienteTurnoAAsesor($detail);
+            // \App\Services\TurnAssignmentService::asignarSiguienteTurnoAAsesor($detail);
         });
 
         return back()->with('message', 'Turno marcado como ausente.');
@@ -370,12 +369,12 @@ class AsesorController extends Controller
         $segundos = (int)$promedioSegundos % 60;
         $tiempoPromedio = sprintf('%02d:%02d', $minutos, $segundos);
         
-        $calificacion = \App\Models\Feedback::where('advisor_id', $user->id)
+        $calificacion = Feedback::where('advisor_id', $user->id)
             ->whereDate('session_date', $fecha)
             ->avg('rating');
 
         // Pausas del día
-        $pausas = \App\Models\Pause::where('user_id', $user->id)
+        $pausas = Pause::where('user_id', $user->id)
             ->whereDate('started_at', $fecha)
             ->orderBy('started_at', 'desc')
             ->get();
@@ -425,5 +424,39 @@ class AsesorController extends Controller
             'turnos' => $turnos,
             'pausas' => $pausasMapeadas,
         ]);
+    }
+
+    /**
+     * Consulta si el asesor tiene un turno asignado automáticamente.
+     */
+    public function consultarAsignacion(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user) return response()->json(['error' => 'No autorizado'], 401);
+
+        // Buscamos si hay un turno en estado 'called' para este asesor
+        // El último evento de pantalla nos dice qué turno tiene asignado
+        $lastEvent = \App\Models\DisplayEvent::where('advisor_id', $user->id)
+            ->where('event_type', 'called')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if ($lastEvent) {
+            $turno = \App\Models\Turn::find($lastEvent->turn_id);
+            
+            // Solo si el turno sigue en estado 'called' (no ha iniciado atención)
+            if ($turno && $turno->status === 'called') {
+                return response()->json([
+                    'assigned' => true,
+                    'turno' => [
+                        'id'        => $turno->id,
+                        'turn_code' => $turno->turn_code,
+                        'category'  => $turno->category,
+                    ]
+                ]);
+            }
+        }
+
+        return response()->json(['assigned' => false]);
     }
 }

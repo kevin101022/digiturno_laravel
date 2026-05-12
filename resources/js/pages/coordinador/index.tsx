@@ -58,7 +58,12 @@ interface Props {
             tmo: string;
             pausas: string;
             calificacion: string;
-            estado: 'activo' | 'pausa';
+            estado: 'activo' | 'en pausa' | 'inactivo';
+        }>;
+        chart_data: Array<{
+            hora: string;
+            real: number;
+            proyectado: number;
         }>;
     };
     reportes: {
@@ -85,6 +90,7 @@ interface Props {
         saturacion_sala: number;
         ratio_tendencia: number;
         duracion_pausas: number;
+        daily_goal: number;
         system_state: {
             ultima_actualizacion: string;
             nodos_activos: string;

@@ -24,10 +24,17 @@ class TurnAssignmentService
         $advisorTypeId = ($turno->queue_type === 'victim') ? 1 : 2;
 
         return DB::transaction(function () use ($turno, $advisorTypeId) {
-            $advisor = AdvisorDetail::where('advisor_type_id', $advisorTypeId)
-                ->where('availability_status', 'green')
-                ->lockForUpdate()
-                ->first();
+            $query = AdvisorDetail::where('availability_status', 'green');
+
+            if ($turno->queue_type === 'victim') {
+                // Turnos de víctimas SOLO para asesores de víctimas
+                $query->where('advisor_type_id', 1);
+            } else {
+                // Turnos generales para CUALQUIER asesor, pero priorizamos al general
+                $query->orderByRaw("FIELD(advisor_type_id, 2, 1)");
+            }
+
+            $advisor = $query->lockForUpdate()->first();
 
             if ($advisor) {
                 self::ejecutarAsignacion($turno, $advisor);
@@ -51,10 +58,18 @@ class TurnAssignmentService
         // Tipo de cola que atiende este asesor
         $queueType = ($advisor->advisor_type_id === 1) ? 'victim' : 'general';
 
-        return DB::transaction(function () use ($advisor, $queueType) {
-            $turno = Turn::where('queue_type', $queueType)
-                ->where('status', 'waiting')
-                ->orderBy('created_at', 'asc')
+        return DB::transaction(function () use ($advisor) {
+            $query = Turn::where('status', 'waiting');
+
+            if ($advisor->advisor_type_id !== 1) {
+                // Asesor general: SOLO atiende turnos generales
+                $query->where('queue_type', '!=', 'victim');
+            } else {
+                // Asesor de víctimas: atiende TODO, pero prioriza víctimas
+                $query->orderByRaw("FIELD(queue_type, 'victim', 'general')");
+            }
+
+            $turno = $query->orderBy('created_at', 'asc')
                 ->lockForUpdate()
                 ->first();
 

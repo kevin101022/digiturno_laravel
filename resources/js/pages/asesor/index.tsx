@@ -33,8 +33,8 @@ export default function AsesorIndex({ stats: initialStats, assigned_module: assi
 
     // POLLING: Consultar la fila de turnos en espera.
     useEffect(() => {
-        // No consultar si no está disponible o si no tiene módulo asignado
-        if (estado !== 'disponible' || !assignedModule) return;
+        // No consultar si no tiene módulo asignado o está en pausa
+        if (!assignedModule || estado === 'pausa') return;
 
         const fetchTurnos = async () => {
             try {
@@ -48,6 +48,42 @@ export default function AsesorIndex({ stats: initialStats, assigned_module: assi
         fetchTurnos(); // Consulta inicial
         const interval = setInterval(fetchTurnos, 3000);
 
+        return () => clearInterval(interval);
+    }, [estado, assignedModule]);
+
+    // POLLING: Consultar si el sistema nos asignó un turno automáticamente (Asignación Automática v5)
+    useEffect(() => {
+        if (!assignedModule || estado === 'pausa') return;
+
+        const checkAsignacion = async () => {
+            // Solo si estamos "disponibles", el sistema puede habernos dado un turno
+            if (estado !== 'disponible') return;
+
+            try {
+                const response = await axios.get('/asesor/consultar');
+                if (response.data.assigned) {
+                    const data = response.data.turno;
+                    setTurnoActual({
+                        id: data.id,
+                        codigo: data.turn_code,
+                        hora_llamado: new Date().toLocaleTimeString(),
+                        ciudadano: {
+                            id: 'N/A',
+                            nombre: 'Ciudadano asignado',
+                            documento: 'Verificar en físico',
+                            tipo_documento: 'CC',
+                            categoria: data.category
+                        }
+                    });
+                    setEstado('atendiendo');
+                }
+            } catch (error) {
+                console.error('Error consultando asignación:', error);
+            }
+        };
+
+        checkAsignacion();
+        const interval = setInterval(checkAsignacion, 4000);
         return () => clearInterval(interval);
     }, [estado, assignedModule]);
 
