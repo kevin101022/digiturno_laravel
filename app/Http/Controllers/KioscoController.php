@@ -170,4 +170,91 @@ final class KioscoController extends Controller
             default    => 'general',
         };
     }
+
+    /**
+     * Busca la atención más reciente (completada hoy) para el documento dado.
+     * Si se encuentra y no ha sido calificada, devuelve la info del asesor.
+     */
+    public function buscarAtencion(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $validated = $request->validate([
+            'numero_documento' => 'required|string'
+        ]);
+
+        $numeroDoc = strtoupper(str_replace('.', '', $validated['numero_documento']));
+
+        $ciudadano = User::where('document_number', $numeroDoc)->first();
+        if (!$ciudadano) {
+            return response()->json(['error' => 'No se encontró el documento.'], 404);
+        }
+
+        $turno = Turn::where('user_id', $ciudadano->id)
+            ->whereDate('created_at', today())
+            ->where('status', 'completed')
+            ->latest('id')
+            ->first();
+
+        if (!$turno) {
+            return response()->json(['error' => 'No se encontró una atención reciente para calificar.'], 404);
+        }
+
+        $attendance = \App\Models\Attendance::with(['advisor'])
+            ->where('turn_id', $turno->id)
+            ->where('absent', false)
+            ->whereNotNull('ended_at')
+            ->latest('id')
+            ->first();
+
+        if (!$attendance) {
+            return response()->json(['error' => 'Atención no encontrada.'], 404);
+        }
+
+        if (\App\Models\Feedback::where('turn_id', $turno->id)->exists()) {
+            return response()->json(['error' => 'Esta atención ya fue calificada.'], 400);
+        }
+
+        $advisorDetail = \App\Models\AdvisorDetail::where('user_id', $attendance->user_id)->first();
+        $module = $advisorDetail ? $advisorDetail->module_number : 'S/N';
+
+        return response()->json([
+            'attendance_id' => $attendance->id,
+            'turn_id' => $turno->id,
+            'advisor_id' => $attendance->user_id,
+            'advisor_name' => $attendance->advisor->name ?? 'Asesor',
+            'module' => $module,
+            'time' => $attendance->ended_at ? $attendance->ended_at->format('h:i A') : '',
+        ]);
+    }
+
+    /**
+     * Guarda la calificación enviada desde el kiosco de feedback.
+     */
+    public function guardarFeedback(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $validated = $request->validate([
+            'attendance_id'    => 'required|integer|exists:attendances,id',
+            'turn_id'          => 'required|integer|exists:turns,id',
+            'advisor_id'       => 'required|integer|exists:users,id',
+            'numero_documento' => 'required|string',
+            'rating'           => 'required|integer|min:1|max:5',
+        ]);
+
+        $numeroDoc = strtoupper(str_replace('.', '', $validated['numero_documento']));
+
+        if (\App\Models\Feedback::where('turn_id', $validated['turn_id'])->exists()) {
+            return response()->json(['error' => 'Ya fue calificado'], 400);
+        }
+
+        \App\Models\Feedback::create([
+            'attendance_id'   => $validated['attendance_id'],
+            'turn_id'         => $validated['turn_id'],
+            'advisor_id'      => $validated['advisor_id'],
+            'document_number' => $numeroDoc,
+            'session_date'    => today(),
+            'rating'          => $validated['rating'],
+            'rated_at'        => now(),
+        ]);
+
+        return response()->json(['success' => true]);
+    }
 }

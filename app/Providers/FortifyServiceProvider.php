@@ -38,14 +38,13 @@ class FortifyServiceProvider extends ServiceProvider
             fn () => new class implements \Laravel\Fortify\Contracts\LoginResponse {
                 public function toResponse($request) {
                     $user = $request->user();
-                    
-                    // Supongamos que tienes un método hasRole o verificamos por el role_id que vimos antes
-                    // O más fácil, por el nombre del usuario para esta prueba:
-                    if (str_contains(strtolower($user->name), 'asesor')) {
+
+                    // role_id 1 = coordinador, role_id 2 = asesor
+                    if ($user->role_id === 2) {
                         return redirect('/asesor');
                     }
-                    
-                    if (str_contains(strtolower($user->name), 'coordinador')) {
+
+                    if ($user->role_id === 1) {
                         return redirect('/coordinador');
                     }
 
@@ -63,6 +62,34 @@ class FortifyServiceProvider extends ServiceProvider
                 }
             }
         );
+
+        // Lógica personalizada de autenticación
+        Fortify::authenticateUsing(function (Request $request) {
+            $mapping = [
+                'Cédula de Ciudadanía' => 'CC',
+                'Tarjeta de Identidad' => 'TI',
+                'Cédula Extranjería'   => 'CE',
+                'Pasaporte'            => 'PA'
+            ];
+
+            $documentType = $mapping[$request->tipo_doc] ?? $request->tipo_doc;
+
+            \Illuminate\Support\Facades\Log::info('Login Attempt:', [
+                'doc_number' => $request->document_number,
+                'original_type' => $request->tipo_doc,
+                'mapped_type' => $documentType
+            ]);
+
+            $user = \App\Models\User::where('document_number', $request->document_number)
+                ->where('document_type', $documentType)
+                ->first();
+
+            if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+                return $user;
+            }
+
+            return null;
+        });
     }
 
     /**

@@ -19,6 +19,8 @@ Route::prefix('kiosco')->name('kiosco.')->group(function () {
     Route::get('/', [KioscoController::class, 'index'])->name('index');
     Route::post('/turno', [KioscoController::class, 'store'])->name('turno.store');
     Route::inertia('/feedback', 'kiosco/feedback')->name('feedback');
+    Route::post('/feedback/buscar', [KioscoController::class, 'buscarAtencion'])->name('feedback.buscar');
+    Route::post('/feedback/guardar', [KioscoController::class, 'guardarFeedback'])->name('feedback.guardar');
 });
 
 // ── Pantalla de Visualización (TV) ──────────────────────────────────────
@@ -42,7 +44,24 @@ Route::middleware(['auth'])->prefix('asesor')->name('asesor.')->group(function (
 });
 
 // Portal del Coordinador
-Route::get('/coordinador', [CoordinadorController::class, 'index'])->name('coordinador.index');
+Route::middleware(['auth'])->prefix('coordinador')->name('coordinador.')->group(function () {
+    Route::get('/',         [CoordinadorController::class, 'index'])   ->name('index');
+    Route::get('/metricas', [CoordinadorController::class, 'metricas'])->name('metricas');
+    
+    // Gestión de Asesores
+    Route::post('/asesores',        [CoordinadorController::class, 'storeAsesor'])  ->name('asesores.store');
+    Route::put('/asesores/{id}',    [CoordinadorController::class, 'updateAsesor']) ->name('asesores.update');
+    Route::delete('/asesores/{id}', [CoordinadorController::class, 'deleteAsesor']) ->name('asesores.delete');
+    
+    // Gestión de Módulos
+    Route::post('/modulos',         [CoordinadorController::class, 'storeModulo'])  ->name('modulos.store');
+    Route::delete('/modulos/{id}',  [CoordinadorController::class, 'deleteModulo']) ->name('modulos.delete');
+    Route::post('/asignar',         [CoordinadorController::class, 'asignarModulo'])->name('asignar');
+    
+    // Gestión de Configuración
+    Route::post('/configuracion',       [CoordinadorController::class, 'updateConfig'])->name('config.update');
+    Route::post('/configuracion/reset', [CoordinadorController::class, 'resetConfig'])->name('config.reset');
+});
 
 
 

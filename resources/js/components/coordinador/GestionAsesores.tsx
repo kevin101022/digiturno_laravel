@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
+import { router } from '@inertiajs/react';
+import asesoresRoutes from '@/routes/coordinador/asesores';
 
 // ─── Colores fijos ────────────────────────────────────────────────────────────
 const C = {
@@ -12,7 +14,7 @@ const C = {
 } as const;
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
-type Especialidad = 'general' | 'victimas' | 'empresas' | 'prioritario';
+type Especialidad = 'general' | 'victimas';
 
 interface Asesor {
     id: number;
@@ -25,23 +27,15 @@ interface Asesor {
 
 const ESPECIALIDADES: { value: Especialidad; label: string; color: string; textColor: string }[] = [
     { value: 'general',    label: 'General',     color: '#e4e1ec', textColor: '#464554' },
-    { value: 'victimas',   label: 'Víctimas',    color: '#fdb300', textColor: '#271900' },
-    { value: 'empresas',   label: 'Empresas',    color: '#e1e0ff', textColor: '#05006c' },
-    { value: 'prioritario',label: 'Prioritario', color: '#ffdad6', textColor: '#93000a' },
+    { value: 'victimas',   label: 'Atención Víctimas',    color: '#fdb300', textColor: '#271900' },
 ];
 
 const TIPOS_DOC = ['Cédula de Ciudadanía', 'Tarjeta de Identidad', 'Cédula Extranjería', 'Pasaporte'];
 
-const MOCK_ASESORES: Asesor[] = [
-    { id: 1, nombre: 'María Rodríguez', tipo_doc: 'Cédula de Ciudadanía', numero_doc: '1020304050', especialidades: ['general', 'victimas'], activo: true },
-    { id: 2, nombre: 'Juan Pérez',      tipo_doc: 'Cédula de Ciudadanía', numero_doc: '9988776655', especialidades: ['general'],              activo: true },
-    { id: 3, nombre: 'Laura Gómez',     tipo_doc: 'Cédula de Ciudadanía', numero_doc: '5544332211', especialidades: ['empresas'],             activo: true },
-    { id: 4, nombre: 'Carlos Mora',     tipo_doc: 'Cédula de Ciudadanía', numero_doc: '3322114455', especialidades: ['general', 'prioritario'],activo: false },
-];
-
 // ─── Chip de especialidad ─────────────────────────────────────────────────────
 function EspChip({ esp }: { esp: Especialidad }) {
-    const e = ESPECIALIDADES.find(x => x.value === esp)!;
+    const e = ESPECIALIDADES.find(x => x.value === esp);
+    if (!e) return null;
     return (
         <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase"
             style={{ backgroundColor: e.color, color: e.textColor }}>
@@ -51,20 +45,40 @@ function EspChip({ esp }: { esp: Especialidad }) {
 }
 
 // ─── Modal CRUD ───────────────────────────────────────────────────────────────
-function ModalAsesor({ asesor, onClose, onSave, onDelete }: {
+function ModalAsesor({ asesor, onClose }: {
     asesor: Asesor;
     onClose: () => void;
-    onSave: (a: Asesor) => void;
-    onDelete: (id: number) => void;
 }) {
     const [form, setForm] = useState<Asesor>({ ...asesor });
     const [confirmarEliminar, setConfirmarEliminar] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const toggleEsp = (e: Especialidad) => {
         setForm(prev => {
             const tiene = prev.especialidades.includes(e);
-            if (tiene && prev.especialidades.length === 1) return prev;
-            return { ...prev, especialidades: tiene ? prev.especialidades.filter(x => x !== e) : [...prev.especialidades, e] };
+            // Solo una especialidad permitida por ahora según la lógica simplificada
+            return { ...prev, especialidades: [e] };
+        });
+    };
+
+    const handleSave = () => {
+        setLoading(true);
+        router.put(asesoresRoutes.update(form.id).url, {
+            nombre: form.nombre,
+            numero_doc: form.numero_doc,
+            activo: form.activo,
+            especialidades: form.especialidades,
+        }, {
+            onSuccess: () => onClose(),
+            onFinish: () => setLoading(false),
+        });
+    };
+
+    const handleDelete = () => {
+        setLoading(true);
+        router.delete(asesoresRoutes.delete(form.id).url, {
+            onSuccess: () => onClose(),
+            onFinish: () => setLoading(false),
         });
     };
 
@@ -86,7 +100,6 @@ function ModalAsesor({ asesor, onClose, onSave, onDelete }: {
                 </div>
 
                 <div className="p-6 space-y-4">
-                    {/* Nombre */}
                     <div className="space-y-1">
                         <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>
                             Nombre Completo
@@ -94,12 +107,9 @@ function ModalAsesor({ asesor, onClose, onSave, onDelete }: {
                         <input type="text" value={form.nombre}
                             onChange={e => setForm(p => ({ ...p, nombre: e.target.value }))}
                             className="w-full px-4 py-2.5 rounded-lg border text-sm outline-none"
-                            style={{ backgroundColor: C.surfaceHigh, borderColor: C.border, color: C.textMain }}
-                            onFocus={e => (e.currentTarget.style.borderColor = C.primary)}
-                            onBlur={e => (e.currentTarget.style.borderColor = C.border)} />
+                            style={{ backgroundColor: C.surfaceHigh, borderColor: C.border, color: C.textMain }} />
                     </div>
 
-                    {/* Documento */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1">
                             <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>Tipo Doc.</label>
@@ -114,23 +124,18 @@ function ModalAsesor({ asesor, onClose, onSave, onDelete }: {
                             <input type="text" value={form.numero_doc}
                                 onChange={e => setForm(p => ({ ...p, numero_doc: e.target.value }))}
                                 className="w-full px-3 py-2.5 rounded-lg border text-sm outline-none"
-                                style={{ backgroundColor: C.surfaceHigh, borderColor: C.border, color: C.textMain }}
-                                onFocus={e => (e.currentTarget.style.borderColor = C.primary)}
-                                onBlur={e => (e.currentTarget.style.borderColor = C.border)} />
+                                style={{ backgroundColor: C.surfaceHigh, borderColor: C.border, color: C.textMain }} />
                         </div>
                     </div>
 
-                    {/* Especialidades */}
                     <div className="space-y-2">
-                        <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>
-                            Especialidades
-                        </label>
-                        <div className="flex flex-wrap gap-2">
+                        <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>Especialidad</label>
+                        <div className="flex gap-2">
                             {ESPECIALIDADES.map(e => {
                                 const activo = form.especialidades.includes(e.value);
                                 return (
                                     <button key={e.value} type="button" onClick={() => toggleEsp(e.value)}
-                                        className="px-3 py-1.5 rounded-full text-xs font-bold border-2 transition-all"
+                                        className="px-4 py-2 rounded-lg text-xs font-bold border-2 transition-all"
                                         style={{
                                             backgroundColor: activo ? e.color : 'transparent',
                                             color: activo ? e.textColor : C.textSub,
@@ -143,21 +148,16 @@ function ModalAsesor({ asesor, onClose, onSave, onDelete }: {
                         </div>
                     </div>
 
-                    {/* Estado */}
                     <div className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: C.surfaceLow }}>
                         <span className="text-xs font-bold" style={{ color: C.textMain }}>Estado del asesor</span>
                         <button onClick={() => setForm(p => ({ ...p, activo: !p.activo }))}
                             className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all"
-                            style={{
-                                backgroundColor: form.activo ? C.successBg : C.errorBg,
-                                color: form.activo ? C.success : C.error,
-                            }}>
+                            style={{ backgroundColor: form.activo ? C.successBg : C.errorBg, color: form.activo ? C.success : C.error }}>
                             <Icon icon={form.activo ? 'material-symbols:check-circle' : 'material-symbols:cancel'} className="text-sm" />
                             {form.activo ? 'Activo' : 'Inactivo'}
                         </button>
                     </div>
 
-                    {/* Acciones */}
                     {confirmarEliminar ? (
                         <div className="p-3 rounded-lg space-y-2" style={{ backgroundColor: C.errorBg }}>
                             <p className="text-xs font-bold text-center" style={{ color: C.error }}>¿Confirmar eliminación?</p>
@@ -167,10 +167,10 @@ function ModalAsesor({ asesor, onClose, onSave, onDelete }: {
                                     style={{ borderColor: C.border, color: C.textSub, backgroundColor: C.surface }}>
                                     Cancelar
                                 </button>
-                                <button onClick={() => onDelete(form.id)}
-                                    className="flex-1 py-2 rounded-lg text-xs font-bold text-white"
+                                <button onClick={handleDelete} disabled={loading}
+                                    className="flex-1 py-2 rounded-lg text-xs font-bold text-white flex items-center justify-center gap-2"
                                     style={{ backgroundColor: C.error }}>
-                                    Eliminar
+                                    {loading && <Icon icon="line-md:loading-twotone-loop" />} Eliminar
                                 </button>
                             </div>
                         </div>
@@ -179,13 +179,12 @@ function ModalAsesor({ asesor, onClose, onSave, onDelete }: {
                             <button onClick={() => setConfirmarEliminar(true)}
                                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-bold"
                                 style={{ borderColor: C.error, color: C.error }}>
-                                <Icon icon="material-symbols:delete" className="text-base" />
-                                Eliminar
+                                <Icon icon="material-symbols:delete" className="text-base" /> Eliminar
                             </button>
-                            <button onClick={() => onSave(form)}
-                                className="flex-1 py-2.5 rounded-lg text-white text-xs font-bold"
+                            <button onClick={handleSave} disabled={loading}
+                                className="flex-1 py-2.5 rounded-lg text-white text-xs font-bold flex items-center justify-center gap-2"
                                 style={{ backgroundColor: C.primary }}>
-                                Guardar Cambios
+                                {loading && <Icon icon="line-md:loading-twotone-loop" />} Guardar Cambios
                             </button>
                         </div>
                     )}
@@ -196,13 +195,19 @@ function ModalAsesor({ asesor, onClose, onSave, onDelete }: {
 }
 
 // ─── Componente principal ─────────────────────────────────────────────────────
-export default function GestionAsesores() {
-    const [asesores, setAsesores] = useState<Asesor[]>(MOCK_ASESORES);
+export default function GestionAsesores({ initialAsesores = [] }: { initialAsesores?: any[] }) {
+    const [asesores, setAsesores] = useState<Asesor[]>(initialAsesores);
     const [busqueda, setBusqueda] = useState('');
     const [modalAsesor, setModalAsesor] = useState<Asesor | null>(null);
     const [guardado, setGuardado] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
 
-    // Form nuevo asesor
+    useEffect(() => {
+        setIsMounted(true);
+        setAsesores(initialAsesores);
+    }, [initialAsesores]);
+
     const [form, setForm] = useState({
         nombre: '', tipo_doc: 'Cédula de Ciudadanía', numero_doc: '',
         password: '', especialidades: ['general'] as Especialidad[],
@@ -211,42 +216,29 @@ export default function GestionAsesores() {
     const [errores, setErrores] = useState<Record<string, string>>({});
 
     const toggleEspForm = (e: Especialidad) => {
-        setForm(prev => {
-            const tiene = prev.especialidades.includes(e);
-            if (tiene && prev.especialidades.length === 1) return prev;
-            return { ...prev, especialidades: tiene ? prev.especialidades.filter(x => x !== e) : [...prev.especialidades, e] };
-        });
-    };
-
-    const validar = () => {
-        const e: Record<string, string> = {};
-        if (!form.nombre.trim()) e.nombre = 'El nombre es requerido';
-        if (!form.numero_doc.trim()) e.numero_doc = 'El número de documento es requerido';
-        if (!form.password || form.password.length < 6) e.password = 'Mínimo 6 caracteres';
-        return e;
+        setForm(prev => ({ ...prev, especialidades: [e] }));
     };
 
     const handleCrear = () => {
-        const e = validar();
-        if (Object.keys(e).length > 0) { setErrores(e); return; }
+        if (!form.nombre.trim() || !form.numero_doc.trim() || form.password.length < 6) {
+            setErrores({
+                nombre: !form.nombre.trim() ? 'Requerido' : '',
+                numero_doc: !form.numero_doc.trim() ? 'Requerido' : '',
+                password: form.password.length < 6 ? 'Mínimo 6 caracteres' : '',
+            });
+            return;
+        }
         setErrores({});
-        setAsesores(prev => [...prev, {
-            id: Date.now(), nombre: form.nombre, tipo_doc: form.tipo_doc,
-            numero_doc: form.numero_doc, especialidades: form.especialidades, activo: true,
-        }]);
-        setForm({ nombre: '', tipo_doc: 'Cédula de Ciudadanía', numero_doc: '', password: '', especialidades: ['general'], mostrarPassword: false });
-        setGuardado(true);
-        setTimeout(() => setGuardado(false), 3000);
-    };
+        setLoading(true);
 
-    const handleSave = (actualizado: Asesor) => {
-        setAsesores(prev => prev.map(a => a.id === actualizado.id ? actualizado : a));
-        setModalAsesor(null);
-    };
-
-    const handleDelete = (id: number) => {
-        setAsesores(prev => prev.filter(a => a.id !== id));
-        setModalAsesor(null);
+        router.post(asesoresRoutes.store().url, form, {
+            onSuccess: () => {
+                setForm({ nombre: '', tipo_doc: 'Cédula de Ciudadanía', numero_doc: '', password: '', especialidades: ['general'], mostrarPassword: false });
+                setGuardado(true);
+                setTimeout(() => setGuardado(false), 3000);
+            },
+            onFinish: () => setLoading(false),
+        });
     };
 
     const filtrados = asesores.filter(a =>
@@ -256,209 +248,75 @@ export default function GestionAsesores() {
 
     return (
         <>
-            {modalAsesor && (
-                <ModalAsesor asesor={modalAsesor}
-                    onClose={() => setModalAsesor(null)}
-                    onSave={handleSave}
-                    onDelete={handleDelete} />
-            )}
+            {modalAsesor && <ModalAsesor asesor={modalAsesor} onClose={() => setModalAsesor(null)} />}
 
             <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
-
-                {/* ── Formulario de creación ──────────────────────── */}
                 <div className="xl:col-span-2">
-                    <div className="rounded-xl p-5 space-y-4"
-                        style={{ backgroundColor: C.surface, border: `1px solid ${C.border}` }}>
+                    <div className="rounded-xl p-5 space-y-4" style={{ backgroundColor: C.surface, border: `1px solid ${C.border}` }}>
                         <div className="flex items-center gap-3 pb-4" style={{ borderBottom: `1px solid ${C.border}` }}>
-                            <div className="p-2 rounded-lg" style={{ backgroundColor: C.primaryBg }}>
-                                <Icon icon="material-symbols:person-add" className="text-xl" style={{ color: C.primary }} />
-                            </div>
+                            <div className="p-2 rounded-lg" style={{ backgroundColor: C.primaryBg }}><Icon icon="material-symbols:person-add" className="text-xl" style={{ color: C.primary }} /></div>
                             <h3 className="text-sm font-bold" style={{ color: C.textMain }}>Registrar Asesor</h3>
                         </div>
 
-                        {guardado && (
-                            <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold"
-                                style={{ backgroundColor: C.successBg, color: C.success }}>
-                                <Icon icon="material-symbols:check-circle" className="text-base" />
-                                Asesor registrado correctamente.
-                            </div>
-                        )}
+                        {guardado && <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold" style={{ backgroundColor: C.successBg, color: C.success }}><Icon icon="material-symbols:check-circle" className="text-base" /> Registrado correctamente.</div>}
 
-                        {/* Nombre */}
                         <div className="space-y-1">
-                            <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>
-                                Nombre Completo *
-                            </label>
-                            <input type="text" placeholder="Ej: Laura Martínez" value={form.nombre}
-                                onChange={e => setForm(p => ({ ...p, nombre: e.target.value }))}
-                                className="w-full px-4 py-2.5 rounded-lg border text-sm outline-none"
-                                style={{ backgroundColor: C.surfaceHigh, borderColor: errores.nombre ? C.error : C.border, color: C.textMain }}
-                                onFocus={e => (e.currentTarget.style.borderColor = C.primary)}
-                                onBlur={e => (e.currentTarget.style.borderColor = errores.nombre ? C.error : C.border)} />
-                            {errores.nombre && <p className="text-[11px]" style={{ color: C.error }}>{errores.nombre}</p>}
+                            <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>Nombre Completo *</label>
+                            <input type="text" placeholder="Ej: Laura Martínez" value={form.nombre} onChange={e => setForm(p => ({ ...p, nombre: e.target.value }))} className="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style={{ backgroundColor: C.surfaceHigh, borderColor: errores.nombre ? C.error : C.border }} />
                         </div>
 
-                        {/* Tipo + Número doc */}
                         <div className="grid grid-cols-2 gap-3">
                             <div className="space-y-1">
                                 <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>Tipo Doc.</label>
-                                <select value={form.tipo_doc} onChange={e => setForm(p => ({ ...p, tipo_doc: e.target.value }))}
-                                    className="w-full px-3 py-2.5 rounded-lg border text-xs outline-none appearance-none"
-                                    style={{ backgroundColor: C.surfaceHigh, borderColor: C.border, color: C.textMain }}>
-                                    {TIPOS_DOC.map(t => <option key={t}>{t}</option>)}
-                                </select>
+                                <select value={form.tipo_doc} onChange={e => setForm(p => ({ ...p, tipo_doc: e.target.value }))} className="w-full px-3 py-2.5 rounded-lg border text-xs outline-none appearance-none" style={{ backgroundColor: C.surfaceHigh, borderColor: C.border }}>{TIPOS_DOC.map(t => <option key={t}>{t}</option>)}</select>
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>N° Identificación *</label>
-                                <input type="text" placeholder="Ej: 1020304050" value={form.numero_doc}
-                                    onChange={e => setForm(p => ({ ...p, numero_doc: e.target.value }))}
-                                    className="w-full px-3 py-2.5 rounded-lg border text-xs outline-none"
-                                    style={{ backgroundColor: C.surfaceHigh, borderColor: errores.numero_doc ? C.error : C.border, color: C.textMain }}
-                                    onFocus={e => (e.currentTarget.style.borderColor = C.primary)}
-                                    onBlur={e => (e.currentTarget.style.borderColor = errores.numero_doc ? C.error : C.border)} />
-                                {errores.numero_doc && <p className="text-[11px]" style={{ color: C.error }}>{errores.numero_doc}</p>}
+                                <input type="text" placeholder="Ej: 1020304050" value={form.numero_doc} onChange={e => setForm(p => ({ ...p, numero_doc: e.target.value }))} className="w-full px-3 py-2.5 rounded-lg border text-xs outline-none" style={{ backgroundColor: C.surfaceHigh, borderColor: errores.numero_doc ? C.error : C.border }} />
                             </div>
                         </div>
 
-                        {/* Contraseña */}
                         <div className="space-y-1">
-                            <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>
-                                Contraseña *
-                            </label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>Contraseña *</label>
                             <div className="relative">
-                                <input type={form.mostrarPassword ? 'text' : 'password'}
-                                    placeholder="Mínimo 6 caracteres" value={form.password}
-                                    onChange={e => setForm(p => ({ ...p, password: e.target.value }))}
-                                    className="w-full pl-4 pr-10 py-2.5 rounded-lg border text-sm outline-none"
-                                    style={{ backgroundColor: C.surfaceHigh, borderColor: errores.password ? C.error : C.border, color: C.textMain }}
-                                    onFocus={e => (e.currentTarget.style.borderColor = C.primary)}
-                                    onBlur={e => (e.currentTarget.style.borderColor = errores.password ? C.error : C.border)} />
-                                <button type="button" onClick={() => setForm(p => ({ ...p, mostrarPassword: !p.mostrarPassword }))}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: C.textSub }}>
-                                    <Icon icon={form.mostrarPassword ? 'material-symbols:visibility-off' : 'material-symbols:visibility'} className="text-base" />
-                                </button>
+                                <input type={form.mostrarPassword ? 'text' : 'password'} value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} className="w-full pl-4 pr-10 py-2.5 rounded-lg border text-sm outline-none" style={{ backgroundColor: C.surfaceHigh, borderColor: errores.password ? C.error : C.border }} />
+                                <button type="button" onClick={() => setForm(p => ({ ...p, mostrarPassword: !p.mostrarPassword }))} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: C.textSub }}><Icon icon={form.mostrarPassword ? 'material-symbols:visibility-off' : 'material-symbols:visibility'} /></button>
                             </div>
-                            {errores.password && <p className="text-[11px]" style={{ color: C.error }}>{errores.password}</p>}
                         </div>
 
-                        {/* Especialidades */}
                         <div className="space-y-2">
-                            <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>
-                                Puede Atender <span className="normal-case font-normal">(opcional, default: General)</span>
-                            </label>
-                            <div className="flex flex-wrap gap-2">
+                            <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>¿Es para Atención Víctimas?</label>
+                            <div className="flex gap-2">
                                 {ESPECIALIDADES.map(e => {
                                     const activo = form.especialidades.includes(e.value);
                                     return (
-                                        <button key={e.value} type="button" onClick={() => toggleEspForm(e.value)}
-                                            className="px-3 py-1.5 rounded-full text-xs font-bold border-2 transition-all"
-                                            style={{
-                                                backgroundColor: activo ? e.color : 'transparent',
-                                                color: activo ? e.textColor : C.textSub,
-                                                borderColor: activo ? e.color : C.border,
-                                            }}>
-                                            {activo && <Icon icon="material-symbols:check-small" className="inline text-xs mr-0.5" />}
-                                            {e.label}
-                                        </button>
+                                        <button key={e.value} type="button" onClick={() => toggleEspForm(e.value)} className="px-4 py-2 rounded-lg text-xs font-bold border-2 transition-all" style={{ backgroundColor: activo ? e.color : 'transparent', color: activo ? e.textColor : C.textSub, borderColor: activo ? e.color : C.border }}>{e.label}</button>
                                     );
                                 })}
                             </div>
-                            <p className="text-[11px]" style={{ color: C.textSub }}>
-                                El asesor podrá acceder con su número de documento y contraseña.
-                            </p>
                         </div>
 
-                        <button onClick={handleCrear}
-                            className="w-full py-3 rounded-full text-sm font-bold text-white transition-all"
-                            style={{ backgroundColor: C.primary }}
-                            onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#10069f')}
-                            onMouseLeave={e => (e.currentTarget.style.backgroundColor = C.primary)}>
-                            Registrar Asesor
-                        </button>
+                        <button onClick={handleCrear} disabled={loading} className="w-full py-3 rounded-full text-sm font-bold text-white transition-all flex items-center justify-center gap-2" style={{ backgroundColor: C.primary }}>{loading && <Icon icon="line-md:loading-twotone-loop" />} Registrar Asesor</button>
                     </div>
                 </div>
 
-                {/* ── Lista de Asesores ───────────────────────────── */}
                 <div className="xl:col-span-3 flex flex-col gap-4">
-                    <div className="rounded-xl overflow-hidden flex flex-col"
-                        style={{ backgroundColor: C.surface, border: `1px solid ${C.border}` }}>
-
-                        {/* Header lista */}
-                        <div className="px-5 py-4 flex items-center justify-between"
-                            style={{ backgroundColor: C.surfaceLow, borderBottom: `1px solid ${C.border}` }}>
-                            <div className="flex items-center gap-2">
-                                <Icon icon="material-symbols:groups" className="text-xl" style={{ color: C.primary }} />
-                                <h3 className="text-sm font-bold" style={{ color: C.textMain }}>
-                                    Asesores Registrados
-                                </h3>
-                                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold"
-                                    style={{ backgroundColor: C.primaryBg, color: C.primaryText }}>
-                                    {asesores.length}
-                                </span>
-                            </div>
+                    <div className="rounded-xl overflow-hidden flex flex-col" style={{ backgroundColor: C.surface, border: `1px solid ${C.border}` }}>
+                        <div className="px-5 py-4 flex items-center justify-between" style={{ backgroundColor: C.surfaceLow, borderBottom: `1px solid ${C.border}` }}>
+                            <div className="flex items-center gap-2"><Icon icon="material-symbols:groups" className="text-xl" style={{ color: C.primary }} /><h3 className="text-sm font-bold" style={{ color: C.textMain }}>Asesores Registrados</h3><span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold" style={{ backgroundColor: C.primaryBg, color: C.primaryText }}>{asesores.length}</span></div>
                         </div>
-
-                        {/* Buscador */}
                         <div className="px-4 py-3" style={{ borderBottom: `1px solid ${C.border}` }}>
-                            <div className="relative">
-                                <Icon icon="material-symbols:search" className="absolute left-3 top-1/2 -translate-y-1/2 text-lg"
-                                    style={{ color: C.textSub }} />
-                                <input type="text" placeholder="Buscar por nombre o documento..."
-                                    value={busqueda} onChange={e => setBusqueda(e.target.value)}
-                                    className="w-full pl-9 pr-4 py-2.5 rounded-lg border text-sm outline-none"
-                                    style={{ backgroundColor: C.surfaceHigh, borderColor: C.border, color: C.textMain }}
-                                    onFocus={e => (e.currentTarget.style.borderColor = C.primary)}
-                                    onBlur={e => (e.currentTarget.style.borderColor = C.border)} />
-                                {busqueda && (
-                                    <button onClick={() => setBusqueda('')}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: C.textSub }}>
-                                        <Icon icon="material-symbols:close" className="text-base" />
-                                    </button>
-                                )}
-                            </div>
+                            <div className="relative"><Icon icon="material-symbols:search" className="absolute left-3 top-1/2 -translate-y-1/2 text-lg" style={{ color: C.textSub }} /><input type="text" placeholder="Buscar..." value={busqueda} onChange={e => setBusqueda(e.target.value)} className="w-full pl-9 pr-4 py-2.5 rounded-lg border text-sm outline-none" style={{ backgroundColor: C.surfaceHigh, borderColor: C.border }} /></div>
                         </div>
-
-                        {/* Lista */}
                         <div className="overflow-y-auto max-h-[480px]">
-                            {filtrados.length === 0 ? (
-                                <div className="flex flex-col items-center gap-2 py-12 text-center">
-                                    <Icon icon="material-symbols:search-off" className="text-4xl" style={{ color: C.border }} />
-                                    <p className="text-sm font-bold" style={{ color: C.textSub }}>No se encontraron asesores</p>
-                                    <p className="text-xs" style={{ color: C.border }}>Intenta con otro nombre o documento</p>
-                                </div>
-                            ) : filtrados.map((a, i) => (
-                                <button key={a.id} onClick={() => setModalAsesor(a)}
-                                    className="w-full flex items-center gap-4 px-5 py-4 text-left transition-colors"
-                                    style={{ borderBottom: i < filtrados.length - 1 ? `1px solid ${C.border}40` : 'none' }}
-                                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = C.surfaceHigh)}
-                                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}>
-
-                                    {/* Avatar iniciales */}
-                                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-                                        style={{ backgroundColor: a.activo ? C.primaryBg : C.surfaceHigh, color: a.activo ? C.primaryText : C.textSub }}>
-                                        {a.nombre.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()}
-                                    </div>
-
-                                    {/* Info */}
+                            {filtrados.map((a, i) => (
+                                <button key={a.id} onClick={() => setModalAsesor(a)} className="w-full flex items-center gap-4 px-5 py-4 text-left transition-colors" style={{ borderBottom: i < filtrados.length - 1 ? `1px solid ${C.border}40` : 'none' }} onMouseEnter={e => (e.currentTarget.style.backgroundColor = C.surfaceHigh)} onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}>
+                                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0" style={{ backgroundColor: a.activo ? C.primaryBg : C.surfaceHigh, color: a.activo ? C.primaryText : C.textSub }}>{a.nombre ? a.nombre.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() : '??'}</div>
                                     <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2">
-                                            <p className="text-sm font-bold truncate" style={{ color: C.textMain }}>{a.nombre}</p>
-                                            {!a.activo && (
-                                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0"
-                                                    style={{ backgroundColor: C.surfaceHigh, color: C.textSub }}>
-                                                    Inactivo
-                                                </span>
-                                            )}
-                                        </div>
-                                        <p className="text-xs truncate" style={{ color: C.textSub }}>
-                                            {a.tipo_doc}: {a.numero_doc}
-                                        </p>
-                                        <div className="flex gap-1 mt-1 flex-wrap">
-                                            {a.especialidades.map(e => <EspChip key={e} esp={e} />)}
-                                        </div>
+                                        <div className="flex items-center gap-2"><p className="text-sm font-bold truncate" style={{ color: C.textMain }}>{a.nombre}</p>{!a.activo && <span className="px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0" style={{ backgroundColor: C.surfaceHigh, color: C.textSub }}>Inactivo</span>}</div>
+                                        <p className="text-xs truncate" style={{ color: C.textSub }}>{a.numero_doc}</p>
+                                        <div className="flex gap-1 mt-1 flex-wrap">{a.especialidades.map(e => <EspChip key={e} esp={e} />)}</div>
                                     </div>
-
-                                    {/* Icono editar */}
                                     <Icon icon="material-symbols:edit" className="text-lg shrink-0" style={{ color: C.border }} />
                                 </button>
                             ))}

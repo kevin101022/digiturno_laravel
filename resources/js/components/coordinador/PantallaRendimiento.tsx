@@ -9,7 +9,14 @@ interface AsesorRendimiento {
     turnos: number;
     tmo: string;
     pausas: string;
-    estado: 'activo' | 'pausa';
+    calificacion: string;
+    estado: 'inactivo' | 'activo' | 'en pausa';
+}
+
+interface ChartItem {
+    hora: string;
+    real: number;
+    proyectado: number;
 }
 
 interface RendimientoData {
@@ -18,6 +25,7 @@ interface RendimientoData {
     meta_diaria_pct: number;
     tmo_tendencia: string;
     asesores: AsesorRendimiento[];
+    chart_data: ChartItem[];
 }
 
 interface Props {
@@ -26,43 +34,35 @@ interface Props {
 
 // ─── Colores fijos ────────────────────────────────────────────────────────────
 const C = {
-    primary:     '#050066',
-    primaryBg:   '#e1e0ff',
+    primary: '#050066',
+    primaryBg: '#e1e0ff',
     primaryText: '#05006c',
-    amber:       '#fdb300',
-    amberText:   '#271900',
-    surface:     '#ffffff',
-    surfaceLow:  '#f5f2fd',
+    amber: '#fdb300',
+    amberText: '#271900',
+    surface: '#ffffff',
+    surfaceLow: '#f5f2fd',
     surfaceHigh: '#eae7f2',
-    border:      '#c7c5d6',
-    textMain:    '#1b1b23',
-    textSub:     '#464554',
-    error:       '#ba1a1a',
-    success:     '#137333',
-    successBg:   '#e6f4ea',
+    border: '#c7c5d6',
+    textMain: '#1b1b23',
+    textSub: '#464554',
+    error: '#ba1a1a',
+    success: '#137333',
+    successBg: '#e6f4ea',
 } as const;
 
 // ─── Gráfico de Barras SVG ────────────────────────────────────────────────────
-const CHART_DATA = [
-    { hora: '08:00', real: 40,  proyectado: 35  },
-    { hora: '09:00', real: 75,  proyectado: 60  },
-    { hora: '10:00', real: 110, proyectado: 90  },
-    { hora: '11:00', real: 95,  proyectado: 120 },
-    { hora: '12:00', real: 130, proyectado: 130 },
-    { hora: '13:00', real: 70,  proyectado: 80  },
-    { hora: '14:00', real: 85,  proyectado: 100 },
-    { hora: '15:00', real: 60,  proyectado: 70  },
-];
-const MAX_VAL = 150;
+function BarChart({ data }: { data: ChartItem[] }) {
+    const [tooltip, setTooltip] = useState<{ x: number; y: number; data: ChartItem } | null>(null);
 
-function BarChart() {
-    const [tooltip, setTooltip] = useState<{ x: number; y: number; data: (typeof CHART_DATA)[0] } | null>(null);
+    if (!data || data.length === 0) return null;
+
+    const MAX_VAL = Math.max(...data.map(d => Math.max(d.real, d.proyectado)), 10) + 20;
 
     return (
         <div className="relative w-full" style={{ height: 280 }}>
             <svg viewBox="0 0 700 240" className="w-full h-full" aria-label="Gráfico de proyección de demanda vs realidad">
                 {/* Grid lines */}
-                {[0, 50, 100, 150].map((v, i) => {
+                {[0, Math.floor(MAX_VAL / 3), Math.floor(MAX_VAL * 2 / 3), MAX_VAL].map((v, i) => {
                     const y = 200 - (v / MAX_VAL) * 180;
                     return (
                         <g key={i}>
@@ -78,8 +78,8 @@ function BarChart() {
                     stroke={C.amber}
                     strokeWidth="2.5"
                     strokeDasharray="6 3"
-                    points={CHART_DATA.map((d, i) => {
-                        const x = 40 + (i / (CHART_DATA.length - 1)) * 650;
+                    points={data.map((d, i) => {
+                        const x = 40 + (i / (data.length - 1)) * 650;
                         const y = 200 - (d.proyectado / MAX_VAL) * 180;
                         return `${x},${y}`;
                     }).join(' ')}
@@ -95,8 +95,8 @@ function BarChart() {
                 <polygon
                     fill="url(#realGrad)"
                     points={[
-                        ...CHART_DATA.map((d, i) => {
-                            const x = 40 + (i / (CHART_DATA.length - 1)) * 650;
+                        ...data.map((d, i) => {
+                            const x = 40 + (i / (data.length - 1)) * 650;
                             const y = 200 - (d.real / MAX_VAL) * 180;
                             return `${x},${y}`;
                         }),
@@ -109,16 +109,16 @@ function BarChart() {
                     fill="none"
                     stroke={C.primary}
                     strokeWidth="2.5"
-                    points={CHART_DATA.map((d, i) => {
-                        const x = 40 + (i / (CHART_DATA.length - 1)) * 650;
+                    points={data.map((d, i) => {
+                        const x = 40 + (i / (data.length - 1)) * 650;
                         const y = 200 - (d.real / MAX_VAL) * 180;
                         return `${x},${y}`;
                     }).join(' ')}
                 />
 
                 {/* Puntos interactivos */}
-                {CHART_DATA.map((d, i) => {
-                    const x = 40 + (i / (CHART_DATA.length - 1)) * 650;
+                {data.map((d, i) => {
+                    const x = 40 + (i / (data.length - 1)) * 650;
                     const y = 200 - (d.real / MAX_VAL) * 180;
                     return (
                         <circle
@@ -133,8 +133,8 @@ function BarChart() {
                 })}
 
                 {/* Labels eje X */}
-                {CHART_DATA.map((d, i) => {
-                    const x = 40 + (i / (CHART_DATA.length - 1)) * 650;
+                {data.map((d, i) => {
+                    const x = 40 + (i / (data.length - 1)) * 650;
                     return (
                         <text key={i} x={x} y="225" textAnchor="middle" fontSize="10" fill={C.textSub}>{d.hora}</text>
                     );
@@ -175,25 +175,6 @@ export default function PantallaRendimiento({ rendimiento }: Props) {
                     <h2 className="text-xl font-bold" style={{ color: C.primary }}>Rendimiento y Proyección</h2>
                     <p className="text-xs mt-0.5" style={{ color: C.textSub }}>Análisis de eficiencia operativa y previsión de demanda.</p>
                 </div>
-                {/* Selector período */}
-                <div
-                    className="flex p-1 rounded-lg"
-                    style={{ backgroundColor: C.surfaceHigh, border: `1px solid ${C.border}` }}
-                >
-                    {(['hoy', 'semana', 'mes'] as const).map(p => (
-                        <button
-                            key={p}
-                            onClick={() => setPeriodo(p)}
-                            className="px-4 py-2 rounded-md text-xs font-bold transition-all capitalize"
-                            style={{
-                                backgroundColor: periodo === p ? C.primaryBg : 'transparent',
-                                color:           periodo === p ? C.primaryText : C.textSub,
-                            }}
-                        >
-                            {p === 'hoy' ? 'Hoy' : p === 'semana' ? 'Semana' : 'Mes'}
-                        </button>
-                    ))}
-                </div>
             </div>
 
             {/* Bento Grid */}
@@ -214,7 +195,7 @@ export default function PantallaRendimiento({ rendimiento }: Props) {
                         </button>
                     </div>
 
-                    <BarChart />
+                    <BarChart data={rendimiento.chart_data} />
 
                     {/* Leyenda */}
                     <div className="flex items-center justify-center gap-6 mt-4 pt-4" style={{ borderTop: `1px solid ${C.border}40` }}>
@@ -225,6 +206,19 @@ export default function PantallaRendimiento({ rendimiento }: Props) {
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: C.amber }} />
                             <span className="text-xs" style={{ color: C.textMain }}>Proyección Histórica</span>
+                        </div>
+                    </div>
+
+                    {/* Nota Explicativa */}
+                    <div className="mt-4 p-3 rounded-lg border border-blue-100" style={{ backgroundColor: '#f0f7ff' }}>
+                        <div className="flex gap-2">
+                            <Icon icon="material-symbols:info-outline" className="text-blue-600 text-lg shrink-0" />
+                            <div className="text-[10px] leading-relaxed text-blue-900">
+                                <span className="font-bold block mb-0.5">Guía de Lectura:</span>
+                                <p>
+                                    La <strong>Demanda Real</strong> muestra el flujo actual de ciudadanos atendidos. La <strong>Proyección</strong> es una estimación calculada multiplicando el tráfico real por el <span className="italic">Factor de Tendencia</span> configurado. Si la línea naranja supera significativamente a la azul en horas futuras, se recomienda habilitar más módulos para prevenir saturación.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -281,30 +275,13 @@ export default function PantallaRendimiento({ rendimiento }: Props) {
                     style={{ backgroundColor: C.surfaceLow, borderBottom: `1px solid ${C.border}` }}
                 >
                     <h3 className="text-base font-bold" style={{ color: C.textMain }}>Rendimiento por Asesor</h3>
-                    <div className="flex gap-2">
-                        {[
-                            { icon: 'material-symbols:filter-list', label: 'Filtrar' },
-                            { icon: 'material-symbols:download', label: 'Exportar' },
-                        ].map(btn => (
-                            <button
-                                key={btn.label}
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-bold transition-colors"
-                                style={{ borderColor: C.border, color: C.textSub, backgroundColor: C.surface }}
-                                onMouseEnter={e => (e.currentTarget.style.backgroundColor = C.surfaceHigh)}
-                                onMouseLeave={e => (e.currentTarget.style.backgroundColor = C.surface)}
-                            >
-                                <Icon icon={btn.icon} className="text-base" />
-                                <span className="hidden sm:inline">{btn.label}</span>
-                            </button>
-                        ))}
-                    </div>
                 </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr style={{ backgroundColor: C.surfaceLow, borderBottom: `1px solid ${C.border}` }}>
-                                {['Asesor', 'Módulo', 'Turnos', 'TMO', 'Pausas', 'Estado'].map(h => (
+                                {['Asesor', 'Módulo', 'Turnos', 'TMO', 'Pausas', 'Calificación', 'Estado'].map(h => (
                                     <th key={h} className="py-3 px-5 text-[10px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>
                                         {h}
                                     </th>
@@ -338,6 +315,12 @@ export default function PantallaRendimiento({ rendimiento }: Props) {
                                     </td>
                                     <td className="py-4 px-5" style={{ color: C.textSub }}>{a.pausas}</td>
                                     <td className="py-4 px-5">
+                                        <div className="flex items-center gap-1">
+                                            <Icon icon="material-symbols:star" className="text-[#fdb300] text-lg" />
+                                            <span className="font-bold" style={{ color: C.textMain }}>{a.calificacion}</span>
+                                        </div>
+                                    </td>
+                                    <td className="py-4 px-5">
                                         {a.estado === 'activo' ? (
                                             <span
                                                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
@@ -346,13 +329,21 @@ export default function PantallaRendimiento({ rendimiento }: Props) {
                                                 <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: C.success }} />
                                                 Activo
                                             </span>
-                                        ) : (
+                                        ) : a.estado === 'en pausa' ? (
                                             <span
                                                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
                                                 style={{ backgroundColor: '#ffdeab', color: '#271900', border: '1px solid #ffba30' }}
                                             >
                                                 <Icon icon="material-symbols:coffee" className="text-[10px]" />
-                                                Pausa
+                                                En Pausa
+                                            </span>
+                                        ) : (
+                                            <span
+                                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
+                                                style={{ backgroundColor: '#ffdad6', color: '#93000a', border: '1px solid #ffb4ab' }}
+                                            >
+                                                <Icon icon="material-symbols:person-off" className="text-[10px]" />
+                                                Inactivo
                                             </span>
                                         )}
                                     </td>

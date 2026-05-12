@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
+import { router } from '@inertiajs/react';
 
 // ─── Colores fijos ────────────────────────────────────────────────────────────
 const C = {
@@ -90,19 +91,36 @@ function BarrasChart({ datos }: { datos: typeof BARS_DIARIO }) {
 }
 
 // ─── Pantalla Reportes ────────────────────────────────────────────────────────
-export default function PantallaReportes() {
-    const [fechaInicio, setFechaInicio] = useState('2024-01-01');
-    const [fechaFin,    setFechaFin]    = useState('2024-03-31');
-    const [sede,        setSede]        = useState('Todas las Sedes');
-    const [granularidad, setGranularidad] = useState<'diario' | 'semanal'>('diario');
-    const [exportando,  setExportando]  = useState<string | null>(null);
+interface Props {
+    reportes: {
+        kpis: {
+            volumen_total: number;
+            tiempo_promedio: number;
+            tasa_ausentismo: number;
+        };
+        chart_diario: Array<{ label: string; value: number }>;
+        chart_semanal: Array<{ label: string; value: number }>;
+        filtros: {
+            fecha_inicio: string;
+            fecha_fin: string;
+        };
+    };
+}
 
-    const handleExport = (tipo: string) => {
-        setExportando(tipo);
-        setTimeout(() => setExportando(null), 2500);
+// ─── Pantalla Reportes ────────────────────────────────────────────────────────
+export default function PantallaReportes({ reportes }: Props) {
+    const [fechaInicio, setFechaInicio] = useState(reportes.filtros.fecha_inicio);
+    const [fechaFin,    setFechaFin]    = useState(reportes.filtros.fecha_fin);
+    const [granularidad, setGranularidad] = useState<'diario' | 'semanal'>('diario');
+
+    const handleFiltrar = () => {
+        router.get('/coordinador', 
+            { fecha_inicio: fechaInicio, fecha_fin: fechaFin },
+            { preserveState: true, only: ['reportes'] }
+        );
     };
 
-    const datos = granularidad === 'diario' ? BARS_DIARIO : BARS_SEMANAL;
+    const datos = granularidad === 'diario' ? reportes.chart_diario : reportes.chart_semanal;
 
     return (
         <div className="max-w-7xl mx-auto space-y-6">
@@ -112,43 +130,10 @@ export default function PantallaReportes() {
                 <div>
                     <h2 className="text-xl font-bold" style={{ color: C.primary }}>Reportes Históricos</h2>
                     <p className="text-xs mt-1 max-w-xl leading-relaxed" style={{ color: C.textSub }}>
-                        Análisis detallado de métricas operacionales. Seleccione el rango de fechas para visualizar y exportar la consolidación.
+                        Análisis detallado de métricas operacionales basado en el rango de fechas seleccionado.
                     </p>
                 </div>
-                <div className="flex gap-2 shrink-0">
-                    {[
-                        { label: 'Exportar PDF',   icon: 'material-symbols:picture-as-pdf', tipo: 'PDF'   },
-                        { label: 'Exportar Excel', icon: 'material-symbols:table-view',      tipo: 'Excel' },
-                    ].map(btn => (
-                        <button
-                            key={btn.tipo}
-                            onClick={() => handleExport(btn.tipo)}
-                            disabled={exportando !== null}
-                            className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-colors border"
-                            style={{
-                                backgroundColor: btn.tipo === 'Excel' ? C.primary : C.surface,
-                                color:           btn.tipo === 'Excel' ? '#fff'     : C.primary,
-                                borderColor:     btn.tipo === 'Excel' ? C.primary  : C.border,
-                                opacity:         exportando !== null ? 0.7 : 1,
-                            }}
-                        >
-                            {exportando === btn.tipo
-                                ? <Icon icon="material-symbols:progress-activity" className="text-base animate-spin" />
-                                : <Icon icon={btn.icon} className="text-base" />
-                            }
-                            <span className="hidden sm:inline">{btn.label}</span>
-                        </button>
-                    ))}
-                </div>
             </div>
-
-            {/* Feedback exportación */}
-            {exportando && (
-                <div className="flex items-center gap-3 px-4 py-3 rounded-lg" style={{ backgroundColor: C.primaryBg, color: C.primaryText }}>
-                    <Icon icon="material-symbols:progress-activity" className="text-lg animate-spin" />
-                    <span className="text-sm font-bold">Generando reporte {exportando}…</span>
-                </div>
-            )}
 
             {/* Filtros */}
             <div
@@ -177,27 +162,13 @@ export default function PantallaReportes() {
                 </div>
 
                 <div className="flex gap-3 w-full lg:w-auto items-end">
-                    <div className="flex flex-col gap-1.5 flex-1">
-                        <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: C.textSub }}>Sede / Punto</label>
-                        <select
-                            value={sede}
-                            onChange={e => setSede(e.target.value)}
-                            className="px-4 h-11 rounded-lg text-sm border outline-none appearance-none"
-                            style={{ backgroundColor: C.surfaceHigh, borderColor: C.border, color: C.textMain }}
-                        >
-                            {['Todas las Sedes', 'Sede Central', 'Punto Norte'].map(s => (
-                                <option key={s}>{s}</option>
-                            ))}
-                        </select>
-                    </div>
                     <button
-                        className="h-11 w-11 rounded-lg flex items-center justify-center border transition-colors shrink-0"
-                        style={{ backgroundColor: C.surfaceLow, borderColor: C.border, color: C.primary }}
-                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = C.surfaceHigh)}
-                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = C.surfaceLow)}
-                        aria-label="Aplicar filtros"
+                        onClick={handleFiltrar}
+                        className="h-11 px-6 rounded-lg flex items-center justify-center gap-2 border transition-all text-white font-bold text-xs"
+                        style={{ backgroundColor: C.primary, borderColor: C.primary }}
                     >
-                        <Icon icon="material-symbols:filter-list" className="text-xl" />
+                        <Icon icon="material-symbols:filter-list" className="text-base" />
+                        Aplicar Filtros
                     </button>
                 </div>
             </div>
@@ -206,21 +177,21 @@ export default function PantallaReportes() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
                     {
-                        label: 'Volumen Total', value: '12,450', unit: '',
+                        label: 'Volumen Total', value: reportes.kpis.volumen_total.toLocaleString(), unit: '',
                         icon: 'material-symbols:groups',
-                        trend: '+15%', trendUp: true, trendLabel: 'vs. periodo anterior',
+                        trend: 'Histórico', trendUp: true, trendLabel: 'Periodo seleccionado',
                         accentColor: C.primary,
                     },
                     {
-                        label: 'Tiempo Promedio', value: '14', unit: 'min',
+                        label: 'Tiempo Promedio', value: reportes.kpis.tiempo_promedio.toString(), unit: 'min',
                         icon: 'material-symbols:timer',
-                        trend: '-2.5 min', trendUp: false, trendLabel: 'Mejora en atención',
+                        trend: 'TMA', trendUp: false, trendLabel: 'Eficiencia de atención',
                         accentColor: C.amber,
                     },
                     {
-                        label: 'Tasa de Ausentismo', value: '8.2', unit: '%',
+                        label: 'Tasa de Ausentismo', value: reportes.kpis.tasa_ausentismo.toString(), unit: '%',
                         icon: 'material-symbols:person-off',
-                        trend: '+1.2%', trendUp: true, trendLabel: 'Requiere atención',
+                        trend: 'No presentados', trendUp: true, trendLabel: 'Incidencia de abandono',
                         accentColor: C.error,
                     },
                 ].map(card => (
@@ -229,7 +200,6 @@ export default function PantallaReportes() {
                         className="rounded-xl p-5 relative overflow-hidden group transition-all"
                         style={{ backgroundColor: C.surface, border: `1px solid ${C.border}` }}
                     >
-                        {/* Círculo decorativo hover */}
                         <div
                             className="absolute -right-4 -top-4 w-24 h-24 rounded-full opacity-5 group-hover:opacity-10 group-hover:scale-150 transition-all duration-500"
                             style={{ backgroundColor: card.accentColor }}
@@ -248,16 +218,10 @@ export default function PantallaReportes() {
                             <span
                                 className="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold"
                                 style={{
-                                    backgroundColor: (card.trendUp && card.accentColor === C.error) || (!card.trendUp)
-                                        ? C.successBg : C.errorBg,
-                                    color: (card.trendUp && card.accentColor === C.error) || (!card.trendUp)
-                                        ? C.success : C.error,
+                                    backgroundColor: C.primaryBg,
+                                    color: C.primaryText,
                                 }}
                             >
-                                <Icon
-                                    icon={`material-symbols:trending-${card.trendUp ? 'up' : 'down'}`}
-                                    className="text-xs"
-                                />
                                 {card.trend}
                             </span>
                             <span className="text-[11px]" style={{ color: C.textSub }}>{card.trendLabel}</span>
@@ -291,6 +255,27 @@ export default function PantallaReportes() {
                 </div>
 
                 <BarrasChart datos={datos} />
+
+                {/* Nota Explicativa */}
+                <div className="mt-6 p-4 rounded-xl border border-blue-100" style={{ backgroundColor: '#f0f7ff' }}>
+                    <div className="flex gap-3">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                            <Icon icon="material-symbols:analytics-outline" className="text-blue-600 text-xl" />
+                        </div>
+                        <div className="flex-1">
+                            <h4 className="text-xs font-bold text-blue-900 mb-1">Guía de Análisis de Reportes:</h4>
+                            <p className="text-[11px] leading-relaxed text-blue-800 opacity-90">
+                                Este gráfico visualiza el volumen de atenciones efectivas procesadas por el sistema. 
+                                <span className="block mt-1">
+                                    • <strong>Vista Diaria:</strong> Ideal para identificar los días de mayor afluencia (picos) y ajustar el personal disponible para la próxima semana.
+                                </span>
+                                <span className="block mt-0.5">
+                                    • <strong>Tasa de Ausentismo:</strong> Un porcentaje alto indica ciudadanos que no esperaron su turno; considere revisar los tiempos de espera si esta métrica sube.
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

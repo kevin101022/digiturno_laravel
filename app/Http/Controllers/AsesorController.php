@@ -53,11 +53,16 @@ class AsesorController extends Controller
         $stats = [
             'atendidos_hoy' => $atendidos,
             'tiempo_promedio' => $tiempoPromedio,
-            'calificacion' => $calificacion ? number_format($calificacion, 1) : '5.0',
+            'calificacion' => $calificacion ? number_format((float)$calificacion, 1) : '5.0',
         ];
 
+        // Obtener el módulo asignado
+        $detail = \App\Models\AdvisorDetail::where('user_id', $user->id)->first();
+        $assignedModule = $detail ? $detail->module_number : null;
+
         return Inertia::render('asesor/index', [
-            'stats' => $stats
+            'stats' => $stats,
+            'assigned_module' => $assignedModule
         ]);
     }
 
@@ -98,7 +103,12 @@ class AsesorController extends Controller
 
         // Obtener el módulo del asesor
         $detail = AdvisorDetail::where('user_id', $user->id)->first();
-        $module = $detail ? $detail->module_number : '1';
+        
+        if (!$detail || empty($detail->module_number)) {
+            return response()->json(['error' => 'No tienes un módulo asignado. Contacta al coordinador.'], 403);
+        }
+        
+        $module = $detail->module_number;
 
         $turno = \App\Models\Turn::where('id', $turnId)->where('status', 'waiting')->lockForUpdate()->first();
 
@@ -202,7 +212,7 @@ class AsesorController extends Controller
 
         DB::transaction(function () use ($turno, $attendance, $request) {
             $now = now();
-            $duration = $now->diffInSeconds($attendance->started_at);
+            $duration = (int) abs($now->diffInSeconds($attendance->started_at));
 
             $attendance->update([
                 'ended_at'         => $now,
@@ -296,7 +306,7 @@ class AsesorController extends Controller
     /**
      * Inicia o finaliza una pausa para el asesor.
      */
-    public function gestionarPausa(Request $request): JsonResponse
+    public function gestionarPausa(Request $request)
     {
         $user = $request->user();
         $pausaActiva = Pause::where('user_id', $user->id)->whereNull('ended_at')->first();
@@ -307,14 +317,14 @@ class AsesorController extends Controller
             $now = now();
             $pausaActiva->update([
                 'ended_at'         => $now,
-                'duration_seconds' => $now->diffInSeconds($pausaActiva->started_at),
+                'duration_seconds' => (int) abs($now->diffInSeconds($pausaActiva->started_at)),
             ]);
             
             if ($detail) {
                 $detail->update(['availability_status' => 'green']);
             }
             
-            return response()->json(['message' => 'Pausa finalizada.', 'pausa' => null]);
+            return back()->with('message', 'Pausa finalizada.');
         }
 
         // Iniciar pausa
@@ -330,7 +340,7 @@ class AsesorController extends Controller
             $detail->update(['availability_status' => 'red']);
         }
 
-        return response()->json(['message' => 'Pausa iniciada.', 'pausa' => $nuevaPausa]);
+        return back()->with('message', 'Pausa iniciada.');
     }
 
     /**
@@ -347,12 +357,12 @@ class AsesorController extends Controller
 
         // Estadísticas de ese día
         $atendidos = Attendance::where('user_id', $user->id)
-            ->whereDate('created_at', $fecha)
+            ->whereDate('started_at', $fecha)
             ->where('absent', false)
             ->count();
             
         $promedioSegundos = Attendance::where('user_id', $user->id)
-            ->whereDate('created_at', $fecha)
+            ->whereDate('started_at', $fecha)
             ->where('absent', false)
             ->avg('duration_seconds');
             
@@ -364,15 +374,25 @@ class AsesorController extends Controller
             ->whereDate('session_date', $fecha)
             ->avg('rating');
 
+        // Pausas del día
+        $pausas = \App\Models\Pause::where('user_id', $user->id)
+            ->whereDate('started_at', $fecha)
+            ->orderBy('started_at', 'desc')
+            ->get();
+
+        $totalSegundosPausa = $pausas->sum('duration_seconds');
+        $tiempoTotalPausa = sprintf('%02d:%02d', floor($totalSegundosPausa / 60), $totalSegundosPausa % 60);
+
         // Lista de turnos
         $turnos = Attendance::with(['turn', 'turn.user', 'feedback'])
             ->where('user_id', $user->id)
-            ->whereDate('created_at', $fecha)
-            ->orderBy('created_at', 'desc')
+            ->whereDate('started_at', $fecha)
+            ->orderBy('started_at', 'desc')
             ->get()
             ->map(function ($att) {
                 return [
                     'id' => $att->id,
+                    'tipo' => 'atencion',
                     'hora' => $att->started_at?->format('H:i:s') ?? '',
                     'codigo_turno' => $att->turn?->turn_code ?? '',
                     'documento' => $att->turn?->user?->document_number ?? '',
@@ -383,13 +403,27 @@ class AsesorController extends Controller
                 ];
             });
 
+        $pausasMapeadas = $pausas->map(function ($p) {
+            return [
+                'id' => $p->id,
+                'tipo' => 'pausa',
+                'hora' => $p->started_at?->format('H:i:s') ?? '',
+                'motivo' => $p->reason,
+                'duracion' => sprintf('%02d:%02d', floor((float)$p->duration_seconds / 60), (int)$p->duration_seconds % 60),
+                'estado' => 'Finalizada'
+            ];
+        });
+
         return response()->json([
             'stats' => [
                 'atendidos' => $atendidos,
                 'tiempo_promedio' => $tiempoPromedio,
                 'calificacion' => $calificacion ? number_format((float)$calificacion, 1) : 'N/A',
+                'tiempo_total_pausa' => $tiempoTotalPausa,
+                'cantidad_pausas' => $pausas->count(),
             ],
             'turnos' => $turnos,
+            'pausas' => $pausasMapeadas,
         ]);
     }
 }

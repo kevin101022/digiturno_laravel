@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import { Icon } from '@iconify/react';
+import axios from 'axios';
 
 // ─── Colores fijos APE (Dark Mode Immune) ───────────────────────────────────
 const C = {
@@ -22,7 +23,7 @@ const C = {
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 type Step = 'bienvenida' | 'identificacion' | 'calificacion' | 'cierre';
 
-const TIPOS_DOC = ['Cédula de Ciudadanía', 'Tarjeta de Identidad', 'Cédula Extranjería', 'Pasaporte'];
+const TIPOS_DOC = ['Cédula de Ciudadanía', 'Tarjeta de Identidad', 'Cédula Extranjería', 'Pasaporte', 'Permiso Especial (PPT)'];
 
 // ─── Componentes de Pasos ──────────────────────────────────────────────────────
 
@@ -53,22 +54,29 @@ function StepBienvenida({ onNext }: { onNext: () => void }) {
 }
 
 // 2. IDENTIFICACIÓN
-function StepIdentificacion({ onNext }: { onNext: (doc: string) => void }) {
+function StepIdentificacion({ onNext, loading, error }: { onNext: (doc: string) => void, loading: boolean, error: string | null }) {
     const [tipoDoc, setTipoDoc] = useState(TIPOS_DOC[0]);
     const [numero, setNumero] = useState('');
 
-    const addNum = (n: string) => setNumero(prev => (prev.length < 12 ? prev + n : prev));
+    const addNum = (n: string) => setNumero(prev => (prev.length < 16 ? prev + n : prev));
     const delNum = () => setNumero(prev => prev.slice(0, -1));
     const clearNum = () => setNumero('');
 
     return (
-        <div className="w-full max-w-2xl space-y-10">
+        <div className="w-full max-w-2xl space-y-10 animate-in fade-in slide-in-from-right-8 duration-500">
             <div className="text-center space-y-4">
                 <h2 className="text-5xl font-bold" style={{ color: C.primary }}>Identifica tu atención</h2>
                 <p className="text-xl" style={{ color: C.textSub }}>Ingresa tu número de documento para encontrar tu registro.</p>
             </div>
 
-            <div className="bg-white rounded-3xl p-10 shadow-xl border border-[#c7c5d640] space-y-8">
+            <div className="bg-white rounded-3xl p-10 shadow-xl border border-[#c7c5d640] space-y-8 relative">
+                {loading && (
+                    <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-3xl">
+                        <Icon icon="material-symbols:progress-activity" className="text-6xl text-[#10069f] animate-spin mb-4" />
+                        <p className="text-xl font-bold text-[#1b1b23]">Buscando registro...</p>
+                    </div>
+                )}
+
                 <div className="space-y-6">
                     <div className="space-y-2">
                         <label className="text-xs font-bold uppercase tracking-widest" style={{ color: C.textMain }}>Tipo de Documento</label>
@@ -89,10 +97,11 @@ function StepIdentificacion({ onNext }: { onNext: (doc: string) => void }) {
                         <label className="text-xs font-bold uppercase tracking-widest" style={{ color: C.textMain }}>Número de Documento</label>
                         <div 
                             className="w-full h-20 bg-white border-2 rounded-xl flex items-center justify-center text-4xl font-bold tracking-[0.2em]"
-                            style={{ borderColor: C.primary, color: C.textMain }}
+                            style={{ borderColor: error ? '#ba1a1a' : C.primary, color: C.textMain }}
                         >
-                            {numero || <span className="opacity-20">Ej. 1020304050</span>}
+                            {numero || <span className="opacity-20 tracking-normal">Ej. 1020304050</span>}
                         </div>
+                        {error && <p className="text-[#ba1a1a] font-bold text-sm text-center mt-2 flex items-center justify-center gap-1"><Icon icon="material-symbols:error" /> {error}</p>}
                     </div>
                 </div>
 
@@ -115,7 +124,7 @@ function StepIdentificacion({ onNext }: { onNext: (doc: string) => void }) {
 
             <button 
                 onClick={() => onNext(numero)}
-                disabled={!numero}
+                disabled={!numero || loading}
                 className="w-full h-20 rounded-2xl font-bold text-3xl flex items-center justify-center gap-4 transition-all active:scale-95 disabled:opacity-50 disabled:grayscale shadow-lg"
                 style={{ backgroundColor: C.primary, color: 'white' }}
             >
@@ -127,34 +136,41 @@ function StepIdentificacion({ onNext }: { onNext: (doc: string) => void }) {
 }
 
 // 3. CALIFICACIÓN
-function StepCalificacion({ onNext }: { onNext: (rating: number) => void }) {
+function StepCalificacion({ onNext, loading, error, info }: { onNext: (rating: number) => void, loading: boolean, error: string | null, info: any }) {
     const [rating, setRating] = useState(0);
 
     return (
-        <div className="w-full max-w-4xl space-y-12 animate-in fade-in zoom-in duration-500">
-            <div className="bg-white rounded-3xl p-12 shadow-xl border border-[#c7c5d640] flex flex-col items-center text-center gap-12">
-                {/* Info Asesor (Simulado) */}
+        <div className="w-full max-w-4xl space-y-12 animate-in fade-in slide-in-from-right-8 duration-500">
+            <div className="bg-white rounded-3xl p-12 shadow-xl border border-[#c7c5d640] flex flex-col items-center text-center gap-12 relative">
+                {loading && (
+                    <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-3xl">
+                        <Icon icon="material-symbols:progress-activity" className="text-6xl text-[#10069f] animate-spin mb-4" />
+                        <p className="text-xl font-bold text-[#1b1b23]">Guardando calificación...</p>
+                    </div>
+                )}
+
+                {/* Info Asesor (Real) */}
                 <div className="flex flex-col items-center gap-6 w-full pb-10 border-b border-[#c7c5d640]">
-                    <div className="w-40 h-40 rounded-full border-8 border-[#eae7f2] overflow-hidden shadow-inner">
-                        <img src="https://ui-avatars.com/api/?name=Maria+Rodriguez&background=050066&color=fff&size=200" alt="Avatar" className="w-full h-full object-cover" />
+                    <div className="w-40 h-40 rounded-full border-8 border-[#eae7f2] overflow-hidden shadow-inner flex items-center justify-center bg-[#f5f2fd]">
+                        <Icon icon="material-symbols:support-agent" className="text-[100px] text-[#050066]" />
                     </div>
                     <div className="space-y-2">
-                        <h2 className="text-5xl font-bold" style={{ color: C.textMain }}>María Rodríguez</h2>
+                        <h2 className="text-5xl font-bold" style={{ color: C.textMain }}>{info?.advisor_name || 'Asesor'}</h2>
                         <div className="flex gap-4 justify-center">
                             <span className="px-6 py-2 bg-[#f5f2fd] rounded-full text-lg font-bold flex items-center gap-2" style={{ color: C.primary }}>
-                                <Icon icon="material-symbols:desk" /> Ventanilla 04
+                                <Icon icon="material-symbols:desk" /> Ventanilla {info?.module || 'S/N'}
                             </span>
                             <span className="px-6 py-2 bg-[#f5f2fd] rounded-full text-lg font-bold flex items-center gap-2" style={{ color: C.primary }}>
-                                <Icon icon="material-symbols:schedule" /> 10:30 AM
+                                <Icon icon="material-symbols:schedule" /> {info?.time || 'Reciente'}
                             </span>
                         </div>
                     </div>
                 </div>
 
                 {/* Pregunta */}
-                <div className="space-y-10">
+                <div className="space-y-10 w-full">
                     <h3 className="text-4xl font-bold" style={{ color: C.textMain }}>¿Cómo calificarías la atención recibida?</h3>
-                    <div className="flex gap-4 md:gap-8">
+                    <div className="flex justify-center gap-4 md:gap-8">
                         {[1, 2, 3, 4, 5].map(star => (
                             <button 
                                 key={star}
@@ -172,11 +188,12 @@ function StepCalificacion({ onNext }: { onNext: (rating: number) => void }) {
                             </button>
                         ))}
                     </div>
+                    {error && <p className="text-[#ba1a1a] font-bold text-center mt-4 text-xl flex items-center justify-center gap-2"><Icon icon="material-symbols:error" /> {error}</p>}
                 </div>
 
                 <button 
                     onClick={() => onNext(rating)}
-                    disabled={rating === 0}
+                    disabled={rating === 0 || loading}
                     className="w-full max-w-md h-20 rounded-full font-bold text-3xl flex items-center justify-center gap-4 transition-all active:scale-95 disabled:opacity-50 shadow-xl"
                     style={{ backgroundColor: rating > 0 ? C.primary : '#c7c5d6', color: 'white' }}
                 >
@@ -202,7 +219,7 @@ function StepCierre({ onReset }: { onReset: () => void }) {
                 }
                 return prev + 1;
             });
-        }, 50);
+        }, 50); // 5 segundos en total
         return () => clearInterval(timer);
     }, [onReset]);
 
@@ -239,10 +256,49 @@ function StepCierre({ onReset }: { onReset: () => void }) {
 export default function KioscoFeedback() {
     const [step, setStep] = useState<Step>('bienvenida');
     const [doc, setDoc] = useState('');
+    const [info, setInfo] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const reset = () => {
         setStep('bienvenida');
         setDoc('');
+        setInfo(null);
+        setError(null);
+    };
+
+    const handleBuscar = async (numero: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await axios.post('/kiosco/feedback/buscar', { numero_documento: numero });
+            setInfo(res.data);
+            setDoc(numero);
+            setStep('calificacion');
+        } catch (err: any) {
+            setError(err.response?.data?.error || 'Ocurrió un error de conexión');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGuardar = async (rating: number) => {
+        setLoading(true);
+        setError(null);
+        try {
+            await axios.post('/kiosco/feedback/guardar', {
+                attendance_id: info.attendance_id,
+                turn_id: info.turn_id,
+                advisor_id: info.advisor_id,
+                numero_documento: doc,
+                rating: rating
+            });
+            setStep('cierre');
+        } catch (err: any) {
+            setError(err.response?.data?.error || 'Error al guardar la calificación');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -264,8 +320,21 @@ export default function KioscoFeedback() {
             {/* Contenido Principal */}
             <main className="z-10 w-full flex flex-col items-center justify-center p-12">
                 {step === 'bienvenida' && <StepBienvenida onNext={() => setStep('identificacion')} />}
-                {step === 'identificacion' && <StepIdentificacion onNext={(d) => { setDoc(d); setStep('calificacion'); }} />}
-                {step === 'calificacion' && <StepCalificacion onNext={() => setStep('cierre')} />}
+                {step === 'identificacion' && (
+                    <StepIdentificacion 
+                        onNext={handleBuscar} 
+                        loading={loading} 
+                        error={error} 
+                    />
+                )}
+                {step === 'calificacion' && (
+                    <StepCalificacion 
+                        onNext={handleGuardar} 
+                        loading={loading} 
+                        error={error} 
+                        info={info} 
+                    />
+                )}
                 {step === 'cierre' && <StepCierre onReset={reset} />}
             </main>
 

@@ -1,6 +1,7 @@
 import { type ReactNode, useState } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Icon } from '@iconify/react';
+import { logout } from '@/routes';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 export type CoordinadorTab = 'dashboard' | 'gestion' | 'rendimiento' | 'reportes' | 'configuracion';
@@ -28,7 +29,7 @@ const NAV_ITEMS: NavItem[] = [
     { tab: 'dashboard',    icon: 'material-symbols:dashboard',             label: 'Dashboard'         },
     { tab: 'gestion',      icon: 'material-symbols:settings-accessibility', label: 'Gestión Operativa' },
     { tab: 'rendimiento',  icon: 'material-symbols:leaderboard',            label: 'Rendimiento'       },
-    { tab: 'reportes',     icon: 'material-symbols:assessment',             label: 'Reportes'          },
+    { tab: 'reportes',     icon: 'material-symbols:analytics',              label: 'Reportes'          },
     { tab: 'configuracion',icon: 'material-symbols:settings',               label: 'Configuración'     },
 ];
 
@@ -152,6 +153,7 @@ export default function CoordinadorLayout({
                         style={{ color: '#ba1a1a' }}
                         onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#ffdad6')}
                         onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+                        onClick={() => router.post(logout().url)}
                     >
                         <Icon icon="material-symbols:logout" className="text-lg" />
                         <span>Cerrar Sesión</span>
@@ -183,59 +185,7 @@ export default function CoordinadorLayout({
                     </div>
 
                     <div className="flex items-center gap-2">
-                        {/* Buscador — oculto en móvil */}
-                        <div className="relative hidden lg:block">
-                            <Icon
-                                icon="material-symbols:search"
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-lg"
-                                style={{ color: COLORS.textSecondary }}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Buscar asesor o turno..."
-                                className="pl-9 pr-4 py-2 rounded-full text-sm border outline-none w-56 focus:ring-2"
-                                style={{
-                                    backgroundColor: COLORS.surfaceHigh,
-                                    borderColor: COLORS.border,
-                                    color: COLORS.textMain,
-                                }}
-                            />
-                        </div>
-
-                        {/* Notificaciones */}
-                        <button
-                            className="relative p-2 rounded-full transition-colors"
-                            style={{ color: COLORS.textSecondary }}
-                            aria-label="Notificaciones"
-                            onMouseEnter={e => (e.currentTarget.style.backgroundColor = COLORS.surfaceHigh)}
-                            onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
-                        >
-                            <Icon icon="material-symbols:notifications" className="text-xl" />
-                            <span
-                                className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full"
-                                style={{ backgroundColor: '#ba1a1a' }}
-                            />
-                        </button>
-
-                        {/* Divider */}
-                        <div className="w-px h-6 mx-1" style={{ backgroundColor: COLORS.border }} />
-
-                        {/* Avatar del coordinador */}
-                        {coordinador && (
-                            <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold hidden lg:block" style={{ color: COLORS.textSecondary }}>
-                                    {coordinador.nombre}
-                                </span>
-                                <img
-                                    src={coordinador.avatar}
-                                    alt={`Perfil de ${coordinador.nombre}`}
-                                    className="w-8 h-8 rounded-full border object-cover"
-                                    style={{ borderColor: COLORS.border }}
-                                    width={32}
-                                    height={32}
-                                />
-                            </div>
-                        )}
+                        {/* El header ahora está limpio de elementos redundantes */}
                     </div>
                 </header>
 

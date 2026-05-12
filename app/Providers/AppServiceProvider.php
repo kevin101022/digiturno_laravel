@@ -24,6 +24,25 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        // Al cerrar sesión, si es asesor, ponerlo en estado inactivo (red) y finalizar pausas pendientes
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Auth\Events\Logout::class,
+            function (\Illuminate\Auth\Events\Logout $event) {
+                if ($event->user && $event->user->role_id == 2) {
+                    \App\Models\AdvisorDetail::where('user_id', $event->user->id)
+                        ->update(['availability_status' => 'red']);
+                        
+                    // También cerrar cualquier pausa abierta si la había
+                    \App\Models\Pause::where('user_id', $event->user->id)
+                        ->whereNull('ended_at')
+                        ->update([
+                            'ended_at' => now(),
+                            'duration_seconds' => \Illuminate\Support\Facades\DB::raw('TIMESTAMPDIFF(SECOND, started_at, NOW())')
+                        ]);
+                }
+            }
+        );
     }
 
     /**

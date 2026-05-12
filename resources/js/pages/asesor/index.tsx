@@ -13,9 +13,10 @@ import type { EstadoAsesor, TurnoActual, AsesorStats, TurnoFila } from '@/types/
 
 interface Props {
     stats: AsesorStats;
+    assigned_module: string | null;
 }
 
-export default function AsesorIndex({ stats: initialStats }: Props) {
+export default function AsesorIndex({ stats: initialStats, assigned_module: assignedModule }: Props) {
     const [estado, setEstado] = useState<EstadoAsesor>('disponible');
     const [turnoActual, setTurnoActual] = useState<TurnoActual | null>(null);
     const [turnosFila, setTurnosFila] = useState<TurnoFila[]>([]);
@@ -32,7 +33,8 @@ export default function AsesorIndex({ stats: initialStats }: Props) {
 
     // POLLING: Consultar la fila de turnos en espera.
     useEffect(() => {
-        if (estado !== 'disponible') return;
+        // No consultar si no está disponible o si no tiene módulo asignado
+        if (estado !== 'disponible' || !assignedModule) return;
 
         const fetchTurnos = async () => {
             try {
@@ -47,7 +49,7 @@ export default function AsesorIndex({ stats: initialStats }: Props) {
         const interval = setInterval(fetchTurnos, 3000);
 
         return () => clearInterval(interval);
-    }, [estado]);
+    }, [estado, assignedModule]);
 
     const handleAceptarTurno = useCallback(async (turnId: number) => {
         try {
@@ -69,14 +71,17 @@ export default function AsesorIndex({ stats: initialStats }: Props) {
                 setEstado('atendiendo');
                 showFeedback('Turno Llamado a Ventanilla', 'material-symbols:campaign', '#10069f');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error al aceptar turno:', error);
-            showFeedback('El turno ya fue asignado a otro asesor', 'material-symbols:error', '#ba1a1a', 3000);
+            const msg = error.response?.data?.error || 'El turno ya fue asignado a otro asesor';
+            showFeedback(msg, 'material-symbols:error', '#ba1a1a', 4000);
             // Refrescar fila
-            const res = await axios.get('/asesor/turnos-en-espera');
-            setTurnosFila(res.data.turnos);
+            if (assignedModule) {
+                const res = await axios.get('/asesor/turnos-en-espera');
+                setTurnosFila(res.data.turnos);
+            }
         }
-    }, []);
+    }, [assignedModule]);
 
     const handleIniciarAtencion = useCallback(() => {
         if (!turnoActual) return;
@@ -145,18 +150,28 @@ export default function AsesorIndex({ stats: initialStats }: Props) {
             )}
 
             {estado === 'disponible' && (
-                <PantallaFilaTurnos 
-                    turnos={turnosFila}
-                    onAceptarTurno={handleAceptarTurno}
-                    onTomarPausa={async () => {
-                        try {
-                            await axios.post('/asesor/pausa', { reason: 'Descanso' });
-                            setEstado('pausa');
-                        } catch (error) {
-                            console.error('Error al tomar pausa:', error);
-                        }
-                    }}
-                />
+                assignedModule ? (
+                    <PantallaFilaTurnos 
+                        turnos={turnosFila}
+                        onAceptarTurno={handleAceptarTurno}
+                        onTomarPausa={() => {
+                            router.post('/asesor/pausa', { reason: 'Descanso' }, {
+                                onSuccess: () => setEstado('pausa')
+                            });
+                        }}
+                    />
+                ) : (
+                    <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-center animate-in fade-in zoom-in duration-500">
+                        <div className="w-48 h-48 bg-[#fcf8ff] rounded-full flex items-center justify-center border-8 border-[#f5f2fd] mb-6 shadow-inner">
+                            <Icon icon="material-symbols:block" className="text-8xl text-[#ba1a1a]" />
+                        </div>
+                        <h2 className="text-4xl font-bold text-[#1b1b23] mb-4">Módulo no asignado</h2>
+                        <p className="text-xl text-[#464554] max-w-2xl">
+                            El coordinador todavía no te ha asignado a un módulo de atención para esta jornada. <br/><br/>
+                            Por favor, comunícate con el coordinador para que te asigne un módulo y puedas comenzar a operar.
+                        </p>
+                    </div>
+                )
             )}
             
             {estado === 'atendiendo' && turnoActual && (
@@ -174,14 +189,10 @@ export default function AsesorIndex({ stats: initialStats }: Props) {
             )}
 
             {estado === 'pausa' && (
-                <PantallaPausa onTerminarPausa={async () => {
-                    try {
-                        await axios.post('/asesor/pausa');
-                        setEstado('disponible');
-                    } catch (error) {
-                        console.error('Error al terminar pausa:', error);
-                        setEstado('disponible'); // Fallback
-                    }
+                <PantallaPausa onTerminarPausa={() => {
+                    router.post('/asesor/pausa', {}, {
+                        onSuccess: () => setEstado('disponible')
+                    });
                 }} />
             )}
 
